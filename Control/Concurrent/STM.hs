@@ -33,9 +33,14 @@ module Control.Concurrent.STM (
   ) where
 
 import GHC.Conc
+import Control.Monad	( MonadPlus(..) )
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TMVar
 import Control.Concurrent.STM.TChan
+
+instance MonadPlus STM where
+  mzero = retry
+  mplus = orElse
 
 check :: Bool -> STM a
 check b = if b then return undefined else retry
