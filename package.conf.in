@@ -1,0 +1,30 @@
+name:		PACKAGE
+version:	VERSION
+license:	BSD3
+maintainer:	libraries@haskell.org
+exposed:	True
+
+exposed-modules:
+	Control.Concurrent.STM,
+	Control.Concurrent.STM.TVar,
+	Control.Concurrent.STM.TChan,
+	Control.Concurrent.STM.TMVar
+
+hidden-modules:
+
+import-dirs:	IMPORT_DIR
+library-dirs:	LIB_DIR
+hs-libraries:   "HSstm"
+extra-libs:
+
+include-dirs:
+includes:		
+depends:	base
+extra-hugs-opts:
+extra-cc-opts:
+extra-ld-opts:
+framework-dirs:
+extra-frameworks:
+haddock-interfaces:
+haddock-html:
+
