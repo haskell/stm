@@ -67,7 +67,7 @@ unGetTChan (TChan read _write) a = do
    newhead <- newTVar (TCons a listhead)
    writeTVar read newhead
 
--- |Returns 'True' if the supplied 'Chan' is empty.
+-- |Returns 'True' if the supplied 'TChan' is empty.
 isEmptyTChan :: TChan a -> STM Bool
 isEmptyTChan (TChan read write) = do
   listhead <- readTVar read
