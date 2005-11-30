@@ -21,6 +21,7 @@ module Control.Concurrent.STM (
 	orElse,
 	check,
         catchSTM,
+	registerDelay,
 
 	-- * TVars
 	module Control.Concurrent.STM.TVar,
