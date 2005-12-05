@@ -16,6 +16,7 @@ module Control.Concurrent.STM.TChan (
 	-- * TChans
 	TChan,
 	newTChan,
+	newTChanIO,
 	readTChan,
 	writeTChan,
 	dupTChan,
@@ -36,6 +37,13 @@ newTChan = do
   hole <- newTVar TNil
   read <- newTVar hole
   write <- newTVar hole
+  return (TChan read write)
+
+newTChanIO :: IO (TChan a)
+newTChanIO = do
+  hole <- newTVarIO TNil
+  read <- newTVarIO hole
+  write <- newTVarIO hole
   return (TChan read write)
 
 writeTChan :: TChan a -> a -> STM ()

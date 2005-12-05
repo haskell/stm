@@ -17,6 +17,8 @@ module Control.Concurrent.STM.TMVar (
 	TMVar,
 	newTMVar,
 	newEmptyTMVar,
+	newTMVarIO,
+	newEmptyTMVarIO,
 	takeTMVar,
 	putTMVar,
 	readTMVar,	
@@ -35,9 +37,19 @@ newTMVar a = do
   t <- newTVar (Just a)
   return (TMVar t)
 
+newTMVarIO :: a -> IO (TMVar a)
+newTMVarIO a = do
+  t <- newTVarIO (Just a)
+  return (TMVar t)
+
 newEmptyTMVar :: STM (TMVar a)
 newEmptyTMVar = do
   t <- newTVar Nothing
+  return (TMVar t)
+
+newEmptyTMVarIO :: IO (TMVar a)
+newEmptyTMVarIO = do
+  t <- newTVarIO Nothing
   return (TMVar t)
 
 takeTMVar :: TMVar a -> STM a

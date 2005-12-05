@@ -17,7 +17,8 @@ module Control.Concurrent.STM.TVar (
 	TVar,
 	newTVar,
 	readTVar,
-	writeTVar
+	writeTVar,
+	newTVarIO
   ) where
 
 import GHC.Conc
