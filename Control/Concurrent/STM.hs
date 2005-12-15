@@ -30,7 +30,10 @@ module Control.Concurrent.STM (
 	module Control.Concurrent.STM.TMVar,
 
 	-- * TChan
-	module Control.Concurrent.STM.TChan
+	module Control.Concurrent.STM.TChan,
+
+	-- * TArray
+	module Control.Concurrent.STM.TArray
   ) where
 
 import GHC.Conc
@@ -38,6 +41,7 @@ import Control.Monad	( MonadPlus(..) )
 import Control.Concurrent.STM.TVar
 import Control.Concurrent.STM.TMVar
 import Control.Concurrent.STM.TChan
+import Control.Concurrent.STM.TArray
 
 instance MonadPlus STM where
   mzero = retry
