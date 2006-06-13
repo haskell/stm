@@ -22,7 +22,11 @@ import Data.Array (Array)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..), HasBounds(..))
 import Data.Ix (rangeSize)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
+#ifdef __GLASGOW_HASKELL__
 import GHC.Conc (STM)
+#else
+import Control.Sequential.STM (STM)
+#endif
 
 -- |TArray is a transactional array, supporting the usual 'MArray'
 -- interface for mutable arrays.

@@ -21,5 +21,8 @@ module Control.Concurrent.STM.TVar (
 	newTVarIO
   ) where
 
+#ifdef __GLASGOW_HASKELL__
 import GHC.Conc
-
+#else
+import Control.Sequential.STM
+#endif

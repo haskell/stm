@@ -1,0 +1,16 @@
+name:		stm
+version:	1.0
+license:	BSD3
+license-file:	LICENSE
+maintainer:	libraries@haskell.org
+synopsis:	Software Transactional Memory
+description:	A modular composable concurrency abstraction.
+-- these are the modules exposed by the cut-down non-GHC interface.
+exposed-modules:
+		Control.Concurrent.STM
+		Control.Concurrent.STM.TArray
+		Control.Concurrent.STM.TVar
+other-modules:
+		Control.Sequential.STM
+build-depends:	base
+extensions:	CPP

@@ -9,7 +9,7 @@ PACKAGE = stm
 VERSION = 1.0
 PACKAGE_DEPS = base
 
-SRC_HC_OPTS += -fglasgow-exts
+SRC_HC_OPTS += -fglasgow-exts -cpp
 
 SRC_HADDOCK_OPTS += -t "Haskell Hierarchical Libraries (stm package)"
 
