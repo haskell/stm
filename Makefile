@@ -4,6 +4,7 @@ include $(TOP)/mk/boilerplate.mk
 ALL_DIRS = \
 	Control/Concurrent \
 	Control/Concurrent/STM \
+	Control/Monad
 
 PACKAGE = stm
 VERSION = 1.0

@@ -10,6 +10,7 @@ exposed-modules:
 		Control.Concurrent.STM
 		Control.Concurrent.STM.TArray
 		Control.Concurrent.STM.TVar
+		Control.Monad.STM
 other-modules:
 		Control.Sequential.STM
 build-depends:	base

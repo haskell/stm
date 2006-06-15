@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------
 -- |
--- Module      :  Control.Concurrent.STM
+-- Module      :  Control.Monad.STM
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
 -- 
@@ -18,20 +18,29 @@
 --
 -----------------------------------------------------------------------------
 
-module Control.Concurrent.STM (
-	module Control.Monad.STM,
-	module Control.Concurrent.STM.TVar,
+module Control.Monad.STM (
+  	STM,
+	atomically,
 #ifdef __GLASGOW_HASKELL__
-	module Control.Concurrent.STM.TMVar,
-	module Control.Concurrent.STM.TChan,
+	retry,
+	orElse,
+	check,
 #endif
-	module Control.Concurrent.STM.TArray
+        catchSTM
   ) where
 
-import Control.Monad.STM
-import Control.Concurrent.STM.TVar
 #ifdef __GLASGOW_HASKELL__
-import Control.Concurrent.STM.TMVar
-import Control.Concurrent.STM.TChan
+import GHC.Conc
+import Control.Monad	( MonadPlus(..) )
+#else
+import Control.Sequential.STM
 #endif
-import Control.Concurrent.STM.TArray
+
+#ifdef __GLASGOW_HASKELL__
+instance MonadPlus STM where
+  mzero = retry
+  mplus = orElse
+
+check :: Bool -> STM a
+check b = if b then return undefined else retry
+#endif
