@@ -7,7 +7,7 @@ ALL_DIRS = \
 	Control/Monad
 
 PACKAGE = stm
-VERSION = 1.0
+VERSION = 2.0
 PACKAGE_DEPS = base
 
 SRC_HC_OPTS += -fglasgow-exts -cpp
