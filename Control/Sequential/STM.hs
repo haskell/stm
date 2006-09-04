@@ -36,7 +36,19 @@ atomically (STM m) = do
 	throw ex
 
 catchSTM :: STM a -> (Exception -> STM a) -> STM a
-catchSTM (STM m) h = STM $ \ r -> m r `catch` \ ex -> unSTM (h ex) r
+catchSTM (STM m) h = STM $ \ r -> do
+    old_rollback <- readIORef r
+    writeIORef r (return ())
+    res <- try (m r)
+    rollback_m <- readIORef r
+    case res of
+	Left ex -> do
+	    rollback_m
+	    writeIORef r old_rollback
+	    unSTM (h ex) r
+	Right a -> do
+	    writeIORef r (rollback_m >> old_rollback)
+	    return a
 
 newtype TVar a = TVar (IORef a)
     deriving (Eq)
