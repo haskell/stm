@@ -7,6 +7,7 @@ exposed:	True
 exposed-modules:
 	Control.Concurrent.STM,
 	Control.Concurrent.STM.TVar,
+	Control.Concurrent.STM.TArray,
 	Control.Concurrent.STM.TChan,
 	Control.Concurrent.STM.TMVar,
 	Control.Monad.STM
