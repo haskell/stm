@@ -12,6 +12,8 @@ PACKAGE_DEPS = base
 
 SRC_HC_OPTS += -fglasgow-exts -cpp
 
+EXCLUDED_SRCS += Setup.hs
+
 SRC_HADDOCK_OPTS += -t "Haskell Hierarchical Libraries (stm package)"
 
 include $(TOP)/mk/target.mk
