@@ -16,6 +16,8 @@
 --    and Practice of Parallel Programming/ 2005.
 --    <http://research.microsoft.com/Users/simonpj/papers/stm/index.htm>
 --
+-- This module only defines the 'STM' monad; you probably want to 
+-- import "Control.Concurrent.STM" (which exports "Control.Monad.STM").
 -----------------------------------------------------------------------------
 
 module Control.Monad.STM (
