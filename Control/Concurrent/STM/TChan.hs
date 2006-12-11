@@ -32,6 +32,7 @@ data TChan a = TChan (TVar (TVarList a)) (TVar (TVarList a))
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a (TVarList a)
 
+-- |Build and returns a new instance of 'TChan'
 newTChan :: STM (TChan a)
 newTChan = do
   hole <- newTVar TNil
@@ -39,6 +40,10 @@ newTChan = do
   write <- newTVar hole
   return (TChan read write)
 
+-- |@IO@ version of 'newTChan'.  This is useful for creating top-level
+-- 'TChan's using 'System.IO.Unsafe.unsafePerformIO', because using
+-- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
+-- possible.
 newTChanIO :: IO (TChan a)
 newTChanIO = do
   hole <- newTVarIO TNil
@@ -46,6 +51,7 @@ newTChanIO = do
   write <- newTVarIO hole
   return (TChan read write)
 
+-- |Write a value to a 'TChan'.
 writeTChan :: TChan a -> a -> STM ()
 writeTChan (TChan _read write) a = do
   listend <- readTVar write -- listend == TVar pointing to TNil
@@ -53,6 +59,7 @@ writeTChan (TChan _read write) a = do
   writeTVar listend (TCons a new_listend)
   writeTVar write new_listend
 
+-- |Read the next value from the 'TChan'.
 readTChan :: TChan a -> STM a
 readTChan (TChan read _write) = do
   listhead <- readTVar read
@@ -63,12 +70,17 @@ readTChan (TChan read _write) = do
 	writeTVar read tail
 	return a
 
+-- |Duplicate a 'TChan': the duplicate channel begins empty, but data written to
+-- either channel from then on will be available from both.  Hence this creates
+-- a kind of broadcast channel, where data written by anyone is seen by
+-- everyone else.
 dupTChan :: TChan a -> STM (TChan a)
 dupTChan (TChan read write) = do
   hole <- readTVar write  
   new_read <- newTVar hole
   return (TChan new_read write)
 
+-- |Put a data item back onto a channel, where it will be the next item read.
 unGetTChan :: TChan a -> a -> STM ()
 unGetTChan (TChan read _write) a = do
    listhead <- readTVar read
