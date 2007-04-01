@@ -9,10 +9,12 @@
 -- Portability :  non-portable (requires STM)
 --
 -- TChan: Transactional channels
+-- (GHC only)
 --
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TChan (
+#ifdef __GLASGOW_HASKELL__
 	-- * TChans
 	TChan,
 	newTChan,
@@ -22,8 +24,10 @@ module Control.Concurrent.STM.TChan (
 	dupTChan,
 	unGetTChan,
 	isEmptyTChan
+#endif
   ) where
 
+#ifdef __GLASGOW_HASKELL__
 import GHC.Conc
 
 -- | 'TChan' is an abstract type representing an unbounded FIFO channel.
@@ -95,3 +99,4 @@ isEmptyTChan (TChan read write) = do
   case head of
     TNil -> return True
     TCons _ _ -> return False
+#endif

@@ -9,10 +9,12 @@
 -- Portability :  non-portable (requires STM)
 --
 -- TMVar: Transactional MVars, for use in the STM monad
+-- (GHC only)
 --
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TMVar (
+#ifdef __GLASGOW_HASKELL__
 	-- * TVars
 	TMVar,
 	newTMVar,
@@ -26,8 +28,10 @@ module Control.Concurrent.STM.TMVar (
 	tryTakeTMVar,
 	tryPutTMVar,
 	isEmptyTMVar
+#endif
   ) where
 
+#ifdef __GLASGOW_HASKELL__
 import GHC.Conc
 
 newtype TMVar a = TMVar (TVar (Maybe a))
@@ -138,3 +142,4 @@ isEmptyTMVar (TMVar t) = do
   case m of
     Nothing -> return True
     Just _  -> return False
+#endif
