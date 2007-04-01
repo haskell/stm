@@ -34,7 +34,7 @@ newtype TMVar a = TMVar (TVar (Maybe a))
 {- ^
 A 'TMVar' is a synchronising variable, used
 for communication between concurrent threads.  It can be thought of
-as a a box, which may be empty or full.
+as a box, which may be empty or full.
 -}
 
 -- |Create a 'TMVar' which contains the supplied value.
