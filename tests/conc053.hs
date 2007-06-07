@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fglasgow-exts #-}
 -- !!! test threadDelay, Random, and QSemN.
 
 -- Variation of conc023, testing STM timeouts instead of IO
