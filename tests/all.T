@@ -22,4 +22,4 @@ test('conc056', only_ways(['threaded1','threaded2']),
 test('conc060', normal, compile_and_run, ['-package stm'])
 test('conc061', normal, compile_and_run, ['-package stm'])
 test('conc062', normal, compile_and_run, ['-package stm'])
-test('conc063', normal, compile_and_run, ['-package stm'])
+test('conc063', skip_if_fast, compile_and_run, ['-package stm'])
