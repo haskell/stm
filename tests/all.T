@@ -9,7 +9,7 @@ test('conc048', compose(only_compiler_types(['ghc']),
 test('conc049', only_compiler_types(['ghc']), compile_and_run, ['-package stm'])
 test('conc050', compose(only_compiler_types(['ghc']), extra_run_opts('10000')), compile_and_run, ['-package stm'])
 
-test('conc052', normal, compile_and_run, ['-package stm'])
+test('conc052', expect_broken_for(1547, ['profc', 'profasm']), compile_and_run, ['-package stm'])
 
 test('conc053', compose(only_ways(['threaded1','threaded2']),
 			skip_if_platform('i386-unknown-mingw32')),
