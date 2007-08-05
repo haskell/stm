@@ -15,5 +15,5 @@ exposed-modules:
 		Control.Monad.STM
 other-modules:
 		Control.Sequential.STM
-build-depends:	base
+build-depends:	base, array
 extensions:	CPP
