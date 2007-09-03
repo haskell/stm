@@ -10,11 +10,15 @@ import System.IO
 main = do
   m <- newEmptyMVar
   forkIO (do_test m)
-  takeMVar m
   -- We do the test in a separate thread, because this test relies on
   -- being able to catch BlockedIndefinitely, and the main thread
   -- won't receive that exception under GHCi because it is held alive
   -- by the interrupt (^C) handler thread.
+  newStablePtr m
+  -- the MVar m must be kept alive, otherwise when the subthread is
+  -- BlockedIndefinitely, the MVar will be unreachable and the main
+  -- thread will also be considered to be BlockedIndefinitely.
+  takeMVar m
 
 do_test m = do
   newStablePtr stdout
