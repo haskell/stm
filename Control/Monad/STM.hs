@@ -24,6 +24,8 @@ module Control.Monad.STM (
   	STM,
 	atomically,
 #ifdef __GLASGOW_HASKELL__
+        always,
+        alwaysSucceeds,
 	retry,
 	orElse,
 	check,
