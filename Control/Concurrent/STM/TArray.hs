@@ -19,7 +19,8 @@ module Control.Concurrent.STM.TArray (
 
 import Control.Monad (replicateM)
 import Data.Array (Array, bounds)
-import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..))
+import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
+                        IArray(numElements))
 import Data.Ix (rangeSize)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
 #ifdef __GLASGOW_HASKELL__
@@ -47,4 +48,4 @@ instance MArray TArray e STM where
         return $ TArray (listArray b a)
     unsafeRead (TArray a) i = readTVar $ unsafeAt a i
     unsafeWrite (TArray a) i e = writeTVar (unsafeAt a i) e
-
+    getNumElements (TArray a) = return (numElements a)
