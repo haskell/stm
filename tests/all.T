@@ -6,8 +6,11 @@ test('conc047',
                omit_ways(['ghci']),
                if_compiler_lt('ghc', '6.9', omit_ways(['ghci', 'threaded2']))]),
      compile_and_run, [''])
-test('conc048', compose(only_compiler_types(['ghc']), 
-                        omit_ways(['ghci'])), compile_and_run, [''])
+test('conc048',
+     composes([only_compiler_types(['ghc']), 
+               omit_ways(['ghci']),
+               if_compiler_lt('ghc', '6.9', omit_ways(['ghci', 'threaded2']))]),
+     compile_and_run, [''])
 
 test('conc049', only_compiler_types(['ghc']), compile_and_run, ['-package stm'])
 test('conc050', compose(only_compiler_types(['ghc']), extra_run_opts('10000')), compile_and_run, ['-package stm'])
