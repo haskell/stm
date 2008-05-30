@@ -12,7 +12,7 @@ test('conc050', compose(only_compiler_types(['ghc']), extra_run_opts('10000')), 
 test('conc052', expect_broken_for(1547, ['profc', 'profasm']), compile_and_run, ['-package stm'])
 
 test('conc053', compose(only_ways(['threaded1','threaded2']),
-			skip_if_platform('i386-unknown-mingw32')),
+			if_platform('i386-unknown-mingw32', skip)),
 		 compile_and_run, ['-package stm'])
 test('conc054', normal, compile_and_run, ['-package stm'])
 test('conc055', exit_code(1), compile_and_run, ['-package stm'])
