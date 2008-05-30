@@ -1,8 +1,11 @@
 test('conc046', only_compiler_types(['ghc']), compile_and_run, [''])
 
 # Omit GHCi for these two, since they appear to deadlock (23/11/2004 --SDM)
-test('conc047', compose(only_compiler_types(['ghc']), 
-                        omit_ways(['ghci'])), compile_and_run, [''])
+test('conc047',
+     composes([only_compiler_types(['ghc']), 
+               omit_ways(['ghci']),
+               if_compiler_lt('ghc', '6.9', omit_ways(['ghci', 'threaded2']))]),
+     compile_and_run, [''])
 test('conc048', compose(only_compiler_types(['ghc']), 
                         omit_ways(['ghci'])), compile_and_run, [''])
 
