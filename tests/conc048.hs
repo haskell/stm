@@ -63,33 +63,41 @@ main = do newStablePtr stdout
 
 iteration :: Int -> IO ()
 iteration n = 
-       do (sv1, sv2) <- atomically ( initTVars )
+       do putStrLn ("Iter " ++ show n)
+          (sv1, sv2) <- atomically ( initTVars )
 
+          putStrLn "T1"
           atomically ( elseTestA sv1 sv2 )
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T2"
           atomically ( elseTestB sv1 sv2 )
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T3"
           atomically ( elseTestC sv1 sv2 )
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T4"
           atomically ( elseTestD sv1 sv2 )
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T5"
           atomically ( elseTestE sv1 sv2 )
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T6"
           Control.Exception.catch (atomically ( elseTestZ sv1 sv2 ))
                  (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 
+          putStrLn "T7"
           if (n == 0) then return () else iteration (n - 1)
 
 
