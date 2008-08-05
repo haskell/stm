@@ -30,12 +30,11 @@ instance Monad STM where
 atomically :: STM a -> IO a
 atomically (STM m) = do
     r <- newIORef (return ())
-    m r `catch` \ ex -> do
+    m r `onException` do
 	rollback <- readIORef r
 	rollback
-	throw ex
 
-catchSTM :: STM a -> (Exception -> STM a) -> STM a
+catchSTM :: Exception e => STM a -> (e -> STM a) -> STM a
 catchSTM (STM m) h = STM $ \ r -> do
     old_rollback <- readIORef r
     writeIORef r (return ())
