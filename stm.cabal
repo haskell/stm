@@ -4,6 +4,7 @@ license:	BSD3
 license-file:	LICENSE
 maintainer:	libraries@haskell.org
 synopsis:	Software Transactional Memory
+category:       Concurrency
 description:	A modular composable concurrency abstraction.
 build-type:     Simple
 exposed-modules:
