@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternSignatures #-}
 module Main where
 
 import GHC.Conc
@@ -93,7 +94,7 @@ iteration n =
 
           putStrLn "T6"
           Control.Exception.catch (atomically ( elseTestZ sv1 sv2 ))
-                 (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+                 (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
           vs <- atomically ( snapshot sv1 sv2 )
           print vs
 

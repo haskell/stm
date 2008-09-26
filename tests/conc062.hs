@@ -14,7 +14,7 @@ main = do
   putStr "\nAttaching invariant\n";
   atomically ( alwaysSucceeds ( do v1 <- readTVar x1
                                    v23 <- readTVar (if (v1 >= 0) then x2 else x3)
-                                   if (v23 > v1) then throwDyn "Exn" else return () ) )
+                                   if (v23 > v1) then throw (ErrorCall "Exn") else return () ) )
 
   putStr "\nTouching invariant (should keep on same TVars)\n"
   atomically ( do writeTVar x1 1

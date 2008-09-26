@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternSignatures #-}
 module Main where
 
 import GHC.Conc
@@ -16,11 +17,11 @@ stmops v1 v2 = do s1 <- readTVar v1
 
 stmupdates :: TVar String -> TVar String -> STM ()
 stmupdates v1 v2 = do writeTVar v1 "About to throw exception"
-                      throwDyn "Exn holding string"
+                      throw (ErrorCall "Exn holding string")
 
 internalexn :: TVar String -> TVar String -> STM ()
 internalexn v1 v2 = catchSTM ( do writeTVar v1 "About to throw exception"
-                                  throwDyn "Exn holding string" )
+                                  throw (ErrorCall "Exn holding string" ))
                              (\_ -> writeTVar v1 "Reached handler ")
 
 internalexn2 :: TVar String -> TVar String -> STM ()
@@ -37,7 +38,7 @@ main = do putStr "Before\n"
 
           putStr "Abandoning update with exception\n"
 	  Control.Exception.catch (atomically ( stmupdates sv1 sv2 )) 
-                     (\_ -> putStr "Abandoned\n")
+                     (\(e::ErrorCall) -> putStr "Abandoned\n")
 
           putStr "Reading from svars:            "
 	  x <- atomically ( stmops sv1 sv2 )

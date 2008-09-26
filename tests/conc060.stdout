@@ -8,7 +8,7 @@ Adding trivially true invariant (no TVar access)
 Adding a trivially true invariant (TVar access)
 
 Adding an invraiant that's false when attemted to be added
-Caught: exception :: [Char]
+Caught: URK
 
 Writing to a TVar watched by a trivially true invariant
 
@@ -17,21 +17,21 @@ Adding a second trivially true invariant (same TVar access)
 Writing to a TVar watched by both trivially true invariants
 
 Adding a trivially false invariant (no TVar access)
-Caught: exception :: [Char]
+Caught: Exn raised in invariant
 
 Adding a trivially false invariant (no TVar access)
-Caught: exception :: [Char]
+Caught: Exn raised in invariant
 
 Adding a trivially false invariant (no TVar access)
 Caught: Transacional invariant violation
 
 Adding a trivially false invariant (with TVar access)
-Caught: exception :: [Char]
+Caught: Exn raised in invariant
 
 Adding a third invariant true if TVar != 42
 
 Violating third invariant by setting TVar to 42
-Caught: exception :: [Char]
+Caught: Exn raised in invariant
 
 Checking final TVar contents
 Final value = 18

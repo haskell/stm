@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternSignatures #-}
 module Main where
 
 import GHC.Conc
@@ -20,9 +21,9 @@ main = do
   putStr "\nAdding an invraiant that's false when attemted to be added\n"
   Control.Exception.catch (atomically ( do writeTVar x 100
                                            alwaysSucceeds ( do v <- readTVar x 
-                                                               if (v == 100) then throwDyn "URK" else return () )
+                                                               if (v == 100) then throw (ErrorCall "URK") else return () )
                                            writeTVar x 0 ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nWriting to a TVar watched by a trivially true invariant\n"
   atomically ( writeTVar x 17 )
@@ -34,30 +35,30 @@ main = do
   atomically ( writeTVar x 18 )
 
   putStr "\nAdding a trivially false invariant (no TVar access)\n"
-  Control.Exception.catch (atomically ( alwaysSucceeds ( throwDyn "Exn raised in invariant" ) ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+  Control.Exception.catch (atomically ( alwaysSucceeds ( throw (ErrorCall "Exn raised in invariant") ) ) )
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAdding a trivially false invariant (no TVar access)\n"
-  Control.Exception.catch (atomically ( always ( throwDyn "Exn raised in invariant" ) ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+  Control.Exception.catch (atomically ( always ( throw (ErrorCall "Exn raised in invariant") ) ) )
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAdding a trivially false invariant (no TVar access)\n"
   Control.Exception.catch (atomically ( always ( return False ) ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAdding a trivially false invariant (with TVar access)\n"
   Control.Exception.catch (atomically ( 
                 alwaysSucceeds ( do t <- readTVar x
-                                    throwDyn "Exn raised in invariant" ) ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+                                    throw (ErrorCall "Exn raised in invariant") ) ) )
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAdding a third invariant true if TVar != 42\n"
   atomically ( alwaysSucceeds ( do t <- readTVar x
-                                   if (t == 42) then throwDyn "Exn raised in invariant" else return () ) )
+                                   if (t == 42) then throw (ErrorCall "Exn raised in invariant") else return () ) )
 
   putStr "\nViolating third invariant by setting TVar to 42\n"
   Control.Exception.catch (atomically ( writeTVar x 42 ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nChecking final TVar contents\n"
   t <- atomically ( readTVar x )

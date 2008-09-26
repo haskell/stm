@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternSignatures #-}
 module Main where
 
 import GHC.Conc
@@ -16,8 +17,8 @@ main = do putStr "Starting\n";
           putStr ("Raising uncaught exn in atomic block\n");
           Control.Exception.catch (atomically ( 
                                      do writeTVar t 17
-                                        throwDyn "Exn raised in a tx" ) )
-           (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+                                        throw (ErrorCall "Exn raised in a tx") ) )
+           (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
           putStr ("TVar contains " ++ (show v) ++ "\n")
@@ -29,7 +30,7 @@ main = do putStr "Starting\n";
           Control.Exception.catch (atomically ( 
                                      catchSTM ( do writeTVar t 17 )
                                               ( \e -> throw e  ) ) )
-           (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+           (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
           putStr ("TVar contains " ++ (show v) ++ "\n")
@@ -41,9 +42,9 @@ main = do putStr "Starting\n";
           putStr ("Raising caught and rethrown exn in atomic block\n");
           Control.Exception.catch (atomically ( 
                                      catchSTM ( do writeTVar t 42
-                                                   throwDyn "Exn raised in a tx" )
+                                                   throw (ErrorCall "Exn raised in a tx") )
                                               ( \e -> throw e  ) ) )
-           (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+           (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
           putStr ("TVar contains " ++ (show v) ++ "\n")
@@ -56,7 +57,7 @@ main = do putStr "Starting\n";
           v <- atomically ( 
                     do writeTVar t 0
                        catchSTM ( do writeTVar t 1
-                                     throwDyn "Exn raised in a tx" )
+                                     throw (ErrorCall "Exn raised in a tx") )
                                 ( \_ -> return () ) 
                        readTVar t )
           putStr ("TVar contained " ++ (show v) ++ " at end of atomic block\n")
@@ -72,7 +73,7 @@ main = do putStr "Starting\n";
                                      ( catchSTM ( retry )
                                                 ( \e -> throw e  ) ) 
                                      `orElse` ( return () ) ) )
-           (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+           (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
           putStr ("TVar contains " ++ (show v) ++ "\n")

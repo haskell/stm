@@ -1,3 +1,4 @@
+{-# LANGUAGE PatternSignatures #-}
 module Main where
 
 import GHC.Conc
@@ -29,13 +30,13 @@ main = do newStablePtr stdout
 
           -- Atomic block that retries after reading 0 TVars
           s1 <- Control.Exception.catch (atomically retry )
-                   (\e -> return ("Caught: " ++ (show e) ++ "\n"))
+                   (\(e::SomeException) -> return ("Caught: " ++ (show e) ++ "\n"))
           putStr s1
 
           -- Atomic block that retries after reading 1 TVar
           t1 <- atomically ( inittvar )
           s1 <- Control.Exception.catch (atomically ( deadlock1 t1 ))
-                   (\e -> return ("Caught: " ++ (show e) ++ "\n"))
+                   (\(e::SomeException) -> return ("Caught: " ++ (show e) ++ "\n"))
           putStr s1
           
 

@@ -65,6 +65,6 @@ main = do
   putStr("\nAfter: ")
   mapM (\v -> putStr ((show v) ++ " " )) (sort fin_vals)
   putStr("\n")
-  if ((sort fin_vals) == init_vals) then return () else throwDyn "Mismatch"
+  if ((sort fin_vals) == init_vals) then return () else throw (ErrorCall "Mismatch")
 
 
