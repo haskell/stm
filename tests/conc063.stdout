@@ -6,7 +6,7 @@ Attaching successful invariant that makes an update
 Attaching successful invariant that uses retry&orelse internally
 
 Attaching a failed invariant that makes an update
-Caught: exception :: [Char]
+Caught: Exn raised in invariant
 
 Attaching an invariant that blocks
 

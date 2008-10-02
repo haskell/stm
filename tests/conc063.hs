@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Main where
 
 import GHC.Conc
@@ -37,8 +38,8 @@ do_test m = do
 
   putStr "\nAttaching a failed invariant that makes an update\n";
   Control.Exception.catch (atomically ( do writeTVar x1 17
-                                           alwaysSucceeds ( throwDyn "Exn raised in invariant" ) ) )
-      (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+                                           alwaysSucceeds ( throw (ErrorCall "Exn raised in invariant") ) ) )
+      (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAttaching an invariant that blocks\n";
   forkIO ( do threadDelay 1000000
@@ -53,6 +54,6 @@ do_test m = do
 
   putStr "\nUpdate the TVar to cause the invariant to block again (expect thread blocked indef)\n"
   Control.Exception.catch (atomically ( writeTVar x1 0 ))
-                 (\e -> putStr ("Caught: " ++ (show e) ++ "\n"))
+                 (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putMVar m ()         
