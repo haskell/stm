@@ -15,7 +15,7 @@
 
 module Control.Concurrent.STM.TMVar (
 #ifdef __GLASGOW_HASKELL__
-	-- * TVars
+	-- * TMVars
 	TMVar,
 	newTMVar,
 	newEmptyTMVar,
