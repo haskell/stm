@@ -7,14 +7,17 @@ synopsis:	Software Transactional Memory
 category:       Concurrency
 description:	A modular composable concurrency abstraction.
 build-type:     Simple
-exposed-modules:
-		Control.Concurrent.STM
-		Control.Concurrent.STM.TArray
-		Control.Concurrent.STM.TVar
-		Control.Concurrent.STM.TChan
-		Control.Concurrent.STM.TMVar
-		Control.Monad.STM
-other-modules:
-		Control.Sequential.STM
-build-depends:	base, array
-extensions:	CPP
+cabal-version:  >=1.2
+
+library
+  exposed-modules:
+    Control.Concurrent.STM
+    Control.Concurrent.STM.TArray
+    Control.Concurrent.STM.TVar
+    Control.Concurrent.STM.TChan
+    Control.Concurrent.STM.TMVar
+    Control.Monad.STM
+  other-modules:
+    Control.Sequential.STM
+  build-depends: base, array
+  extensions:    CPP
