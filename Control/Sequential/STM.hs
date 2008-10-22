@@ -27,14 +27,28 @@ instance Monad STM where
 	x <- m r
 	unSTM (k x) r
 
+#ifdef BASE4
 atomically :: STM a -> IO a
 atomically (STM m) = do
     r <- newIORef (return ())
     m r `onException` do
 	rollback <- readIORef r
 	rollback
+#else
+atomically :: STM a -> IO a
+atomically (STM m) = do
+    r <- newIORef (return ())
+    m r `catch` \ ex -> do
+	rollback <- readIORef r
+	rollback
+	throw ex
+#endif
 
+#ifdef BASE4
 catchSTM :: Exception e => STM a -> (e -> STM a) -> STM a
+#else
+catchSTM :: STM a -> (Exception -> STM a) -> STM a
+#endif
 catchSTM (STM m) h = STM $ \ r -> do
     old_rollback <- readIORef r
     writeIORef r (return ())
