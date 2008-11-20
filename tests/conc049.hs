@@ -111,8 +111,15 @@ sourceSinkThread accounts = loop True
 	  let t = accounts ! acct
 	  atomically_ sourceThreadId $ do
 	    x <- readTVar t
-	    writeTVar t (max 0 (x+amount)) -- never drop below zero, 
+	    writeTVar t $! max 0 (x+amount) -- never drop below zero,
 					   -- and don't block.
+
+    -- NB. $! above is necessary to avoid this test getting into a bad
+    -- state.  The sourceSinkThread fills up all the accounts with
+    -- thunks which the other threads have to evaluate.  They'll keep
+    -- getting blocked on each other, and meanwhile the
+    -- sourceSinkThread can keep on filling up the accounts with more
+    -- thunks.
 
 -- -----------------------------------------------------------------------------
 -- Our tracing wrapper for atomically
