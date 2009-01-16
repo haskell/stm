@@ -5,7 +5,7 @@
 -- #hide
 module Control.Sequential.STM (
 	STM, atomically, catchSTM,
-	TVar, newTVar, newTVarIO, readTVar, writeTVar
+	TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar
     ) where
 
 import Prelude hiding (catch)
@@ -76,6 +76,9 @@ newTVarIO a = do
 
 readTVar :: TVar a -> STM a
 readTVar (TVar ref) = STM (const (readIORef ref))
+
+readTVarIO :: TVar a -> IO a
+readTVarIO (TVar ref) = readIORef ref
 
 writeTVar :: TVar a -> a -> STM ()
 writeTVar (TVar ref) a = STM $ \ r -> do
