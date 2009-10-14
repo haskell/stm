@@ -3,9 +3,9 @@ module Main where
 
 import GHC.Conc
 import Control.Exception
-import IO
 import Foreign.StablePtr
 import System.IO
+import Control.Concurrent.MVar
 
 -- Test invariants using updates & blocking in invariants
 main = do

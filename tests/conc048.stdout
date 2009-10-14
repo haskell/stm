@@ -10,7 +10,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 9
@@ -25,7 +25,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 8
@@ -40,7 +40,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 7
@@ -55,7 +55,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 6
@@ -70,7 +70,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 5
@@ -85,7 +85,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 4
@@ -100,7 +100,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 3
@@ -115,7 +115,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 2
@@ -130,7 +130,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 1
@@ -145,7 +145,7 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
 Iter 0
@@ -160,6 +160,6 @@ T4
 T5
 (0,50)
 T6
-Caught: thread blocked indefinitely
+Caught: thread blocked indefinitely in an STM transaction
 (0,50)
 T7
