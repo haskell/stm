@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TChan
@@ -79,7 +80,7 @@ readTChan (TChan read _write) = do
 -- a kind of broadcast channel, where data written by anyone is seen by
 -- everyone else.
 dupTChan :: TChan a -> STM (TChan a)
-dupTChan (TChan read write) = do
+dupTChan (TChan _read write) = do
   hole <- readTVar write  
   new_read <- newTVar hole
   return (TChan new_read write)
@@ -93,7 +94,7 @@ unGetTChan (TChan read _write) a = do
 
 -- |Returns 'True' if the supplied 'TChan' is empty.
 isEmptyTChan :: TChan a -> STM Bool
-isEmptyTChan (TChan read write) = do
+isEmptyTChan (TChan read _write) = do
   listhead <- readTVar read
   head <- readTVar listhead
   case head of
