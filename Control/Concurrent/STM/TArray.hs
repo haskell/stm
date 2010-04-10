@@ -39,7 +39,7 @@ import Control.Sequential.STM (STM)
 -- but it may be replaced by a more efficient implementation in the future
 -- (the interface will remain the same, however).
 --
-newtype TArray i e = TArray (Array i (TVar e)) deriving (Typeable)
+newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
