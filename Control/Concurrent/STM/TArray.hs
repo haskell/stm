@@ -1,4 +1,6 @@
 {-# OPTIONS -fglasgow-exts #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TArray
@@ -22,6 +24,7 @@ import Data.Array (Array, bounds)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
                         IArray(numElements))
 import Data.Ix (rangeSize)
+import Data.Typeable (Typeable)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc (STM)
@@ -36,7 +39,7 @@ import Control.Sequential.STM (STM)
 -- but it may be replaced by a more efficient implementation in the future
 -- (the interface will remain the same, however).
 --
-newtype TArray i e = TArray (Array i (TVar e))
+newtype TArray i e = TArray (Array i (TVar e)) deriving (Typeable)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
