@@ -1,4 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TChan
@@ -31,8 +33,10 @@ module Control.Concurrent.STM.TChan (
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc
 
+import Data.Typeable (Typeable)
+
 -- | 'TChan' is an abstract type representing an unbounded FIFO channel.
-data TChan a = TChan (TVar (TVarList a)) (TVar (TVarList a))
+data TChan a = TChan (TVar (TVarList a)) (TVar (TVarList a)) deriving Typeable
 
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a (TVarList a)
