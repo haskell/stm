@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveDataTypeable #-}
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TMVar
@@ -34,7 +36,9 @@ module Control.Concurrent.STM.TMVar (
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc
 
-newtype TMVar a = TMVar (TVar (Maybe a))
+import Data.Typeable (Typeable)
+
+newtype TMVar a = TMVar (TVar (Maybe a)) deriving (Eq, Typeable)
 {- ^
 A 'TMVar' is a synchronising variable, used
 for communication between concurrent threads.  It can be thought of
