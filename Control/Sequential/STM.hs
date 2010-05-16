@@ -9,6 +9,7 @@ module Control.Sequential.STM (
     ) where
 
 import Prelude hiding (catch)
+import Control.Applicative (Applicative(pure, (<*>)))
 import Control.Exception
 import Data.IORef
 
@@ -21,8 +22,12 @@ unSTM (STM f) = f
 instance Functor STM where
     fmap f (STM m) = STM (fmap f . m)
 
+instance Applicative STM where
+    pure = STM . const . pure
+    STM mf <*> STM mx = STM $ \ r -> mf r <*> mx r
+
 instance Monad STM where
-    return x = STM (const (return x))
+    return = pure
     STM m >>= k = STM $ \ r -> do
 	x <- m r
 	unSTM (k x) r
