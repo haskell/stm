@@ -30,3 +30,7 @@ import GHC.Conc
 #else
 import Control.Sequential.STM
 #endif
+
+#if ! MIN_VERSION_base(4,2,0)
+readTVarIO = atomically . readTVar
+#endif
