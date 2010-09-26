@@ -4,7 +4,7 @@
 
 -- #hide
 module Control.Sequential.STM (
-	STM, atomically, catchSTM,
+	STM, atomically, throwSTM, catchSTM,
 	TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar
     ) where
 
@@ -48,6 +48,13 @@ atomically (STM m) = do
 	rollback
 	throw ex
 #endif
+
+#ifdef BASE4
+throwSTM :: Exception e => e -> STM a
+#else
+throwSTM :: Exception -> STM a
+#endif
+throwSTM = STM . const . throwIO
 
 #ifdef BASE4
 catchSTM :: Exception e => STM a -> (e -> STM a) -> STM a

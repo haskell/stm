@@ -31,6 +31,7 @@ module Control.Monad.STM (
 	orElse,
 	check,
 #endif
+        throwSTM,
         catchSTM
   ) where
 
