@@ -36,7 +36,7 @@ module Control.Monad.STM (
 
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc
-#if ! MIN_VERSION_base(4,3,0)
+#if ! (MIN_VERSION_base(4,3,0))
 import Control.Monad	( MonadPlus(..) )
 #endif
 #else
@@ -44,7 +44,7 @@ import Control.Sequential.STM
 #endif
 
 #ifdef __GLASGOW_HASKELL__
-#if ! MIN_VERSION_base(4,3,0)
+#if ! (MIN_VERSION_base(4,3,0))
 instance MonadPlus STM where
   mzero = retry
   mplus = orElse
