@@ -29,7 +29,7 @@ main = do putStr "Starting\n";
           putStr ("Trying a catchSTM without raising an exception\n");
           Control.Exception.catch (atomically ( 
                                      catchSTM ( do writeTVar t 17 )
-                                              ( \e -> throw e  ) ) )
+                                              ( \e -> throw (e::SomeException)  ) ) )
            (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
@@ -43,7 +43,7 @@ main = do putStr "Starting\n";
           Control.Exception.catch (atomically ( 
                                      catchSTM ( do writeTVar t 42
                                                    throw (ErrorCall "Exn raised in a tx") )
-                                              ( \e -> throw e  ) ) )
+                                              ( \e -> throw (e::SomeException)  ) ) )
            (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
           v <- atomically (readTVar t)
@@ -58,7 +58,7 @@ main = do putStr "Starting\n";
                     do writeTVar t 0
                        catchSTM ( do writeTVar t 1
                                      throw (ErrorCall "Exn raised in a tx") )
-                                ( \_ -> return () ) 
+                                ( \e -> let _ = e :: SomeException in return () )
                        readTVar t )
           putStr ("TVar contained " ++ (show v) ++ " at end of atomic block\n")
 
@@ -71,7 +71,7 @@ main = do putStr "Starting\n";
           putStr ("Testing retry inside catchSTM\n");
           Control.Exception.catch (atomically ( 
                                      ( catchSTM ( retry )
-                                                ( \e -> throw e  ) ) 
+                                                ( \e -> throw (e::SomeException)  ) )
                                      `orElse` ( return () ) ) )
            (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 

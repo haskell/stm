@@ -22,11 +22,13 @@ stmupdates v1 v2 = do writeTVar v1 "About to throw exception"
 internalexn :: TVar String -> TVar String -> STM ()
 internalexn v1 v2 = catchSTM ( do writeTVar v1 "About to throw exception"
                                   throw (ErrorCall "Exn holding string" ))
-                             (\_ -> writeTVar v1 "Reached handler ")
+                             (\e -> let _ = e :: SomeException in
+                                    writeTVar v1 "Reached handler ")
 
 internalexn2 :: TVar String -> TVar String -> STM ()
 internalexn2 v1 v2 = catchSTM ( do writeTVar v1 "Hello " )
-                              (\_ -> writeTVar v1 "Reached handler2 ")
+                              (\e -> let _ = e :: SomeException in
+                                     writeTVar v1 "Reached handler2 ")
 
 -- Exception handling within / around memory transactions
 main = do putStr "Before\n"

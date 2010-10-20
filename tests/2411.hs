@@ -13,5 +13,5 @@ main = do
                                    writeTVar tv "testing"
                                    if read s `mod` 25 == 0
                                      then throw $ AssertionFailed ("SimulatedException " ++ s)
-                                     else return s) `catchSTM` (\e -> return (show e))
+                                     else return s) `catchSTM` (\e -> return (show (e::SomeException)))
                           putStrLn x
