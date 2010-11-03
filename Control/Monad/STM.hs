@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE MagicHash #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Monad.STM
@@ -36,9 +37,13 @@ module Control.Monad.STM (
   ) where
 
 #ifdef __GLASGOW_HASKELL__
-import GHC.Conc
 #if ! (MIN_VERSION_base(4,3,0))
-import Control.Monad	( MonadPlus(..) )
+import GHC.Conc hiding (catchSTM)
+import Control.Monad    ( MonadPlus(..) )
+import GHC.Exts (raiseIO#, catchSTM#)
+import Control.Exception
+#else
+import GHC.Conc
 #endif
 #else
 import Control.Sequential.STM
@@ -53,4 +58,35 @@ instance MonadPlus STM where
 
 check :: Bool -> STM a
 check b = if b then return undefined else retry
+#endif
+
+#if ! (MIN_VERSION_base(4,3,0))
+-- |Exception handling within STM actions.
+catchSTM :: Exception e => STM a -> (e -> STM a) -> STM a
+catchSTM (STM m) handler = STM $ catchSTM# m handler'
+    where
+      handler' e = case fromException e of
+                     Just e' -> case handler e' of STM m' -> m'
+                     Nothing -> raiseIO# e
+
+-- | A variant of 'throw' that can only be used within the 'STM' monad.
+--
+-- Throwing an exception in @STM@ aborts the transaction and propagates the
+-- exception.
+--
+-- Although 'throwSTM' has a type that is an instance of the type of 'throw', the
+-- two functions are subtly different:
+--
+-- > throw e    `seq` x  ===> throw e
+-- > throwSTM e `seq` x  ===> x
+--
+-- The first example will cause the exception @e@ to be raised,
+-- whereas the second one won\'t.  In fact, 'throwSTM' will only cause
+-- an exception to be raised when it is used within the 'STM' monad.
+-- The 'throwSTM' variant should be used in preference to 'throw' to
+-- raise an exception within the 'STM' monad because it guarantees
+-- ordering with respect to other 'STM' operations, whereas 'throw'
+-- does not.
+throwSTM :: Exception e => e -> STM a
+throwSTM e = STM $ raiseIO# (toException e)
 #endif
