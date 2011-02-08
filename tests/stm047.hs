@@ -3,7 +3,6 @@ module Main where
 
 import GHC.Conc
 import Control.Exception
-import IO
 import Foreign.StablePtr
 import System.IO
 

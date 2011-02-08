@@ -3,7 +3,7 @@
 
 -- Variation of conc023, testing STM timeouts instead of IO
 
-import Random
+import System.Random
 import Control.Concurrent
 import Control.Exception
 import Control.Concurrent.STM

@@ -4,7 +4,6 @@ module Main where
 import GHC.Conc
 import Control.Concurrent
 import Control.Exception
-import IO
 import Foreign.StablePtr
 import System.IO
 
