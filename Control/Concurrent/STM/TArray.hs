@@ -18,7 +18,6 @@ module Control.Concurrent.STM.TArray (
     TArray
 ) where
 
-import Control.Monad (replicateM)
 import Data.Array (Array, bounds)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
                         IArray(numElements))
@@ -43,11 +42,23 @@ newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
     newArray b e = do
-        a <- replicateM (rangeSize b) (newTVar e)
+        a <- rep (rangeSize b) (newTVar e)
         return $ TArray (listArray b a)
     newArray_ b = do
-        a <- replicateM (rangeSize b) (newTVar arrEleBottom)
+        a <- rep (rangeSize b) (newTVar arrEleBottom)
         return $ TArray (listArray b a)
     unsafeRead (TArray a) i = readTVar $ unsafeAt a i
     unsafeWrite (TArray a) i e = writeTVar (unsafeAt a i) e
     getNumElements (TArray a) = return (numElements a)
+
+-- | Like 'replicateM' but uses an accumulator to prevent stack overflows.
+-- Unlike 'replicateM' the returned list is in reversed order.
+-- This doesn't matter though since this function is only used to create
+-- arrays with identical elements.
+rep :: Monad m => Int -> m a -> m [a]
+rep n m = go n []
+    where
+      go 0 xs = return xs
+      go n xs = do
+          x <- m
+          go (n-1) (x:xs)
