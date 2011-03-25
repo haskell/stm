@@ -1,5 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-{-# LANGUAGE MagicHash #-}
+{-# LANGUAGE MagicHash, UnboxedTuples #-}
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Monad.STM
@@ -40,11 +40,12 @@ module Control.Monad.STM (
 #if ! (MIN_VERSION_base(4,3,0))
 import GHC.Conc hiding (catchSTM)
 import Control.Monad    ( MonadPlus(..) )
-import GHC.Exts (raiseIO#, catchSTM#)
 import Control.Exception
 #else
 import GHC.Conc
 #endif
+import GHC.Exts
+import Control.Monad.Fix
 #else
 import Control.Sequential.STM
 #endif
@@ -90,3 +91,15 @@ catchSTM (STM m) handler = STM $ catchSTM# m handler'
 throwSTM :: Exception e => e -> STM a
 throwSTM e = STM $ raiseIO# (toException e)
 #endif
+
+
+data STMret a = STMret (State# RealWorld) a
+
+liftSTM :: STM a -> State# RealWorld -> STMret a
+liftSTM (STM m) = \s -> case m s of (# s', r #) -> STMret s' r
+
+instance MonadFix STM where
+  mfix k = STM $ \s ->
+    let ans        = liftSTM (k r) s
+        STMret _ r = ans
+    in case ans of STMret s' x -> (# s', x #)
