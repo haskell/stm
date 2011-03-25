@@ -59,6 +59,6 @@ rep :: Monad m => Int -> m a -> m [a]
 rep n m = go n []
     where
       go 0 xs = return xs
-      go n xs = do
+      go i xs = do
           x <- m
-          go (n-1) (x:xs)
+          go (i-1) (x:xs)
