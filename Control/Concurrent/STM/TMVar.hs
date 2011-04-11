@@ -26,6 +26,7 @@ module Control.Concurrent.STM.TMVar (
 	takeTMVar,
 	putTMVar,
 	readTMVar,	
+	tryReadTMVar,
 	swapTMVar,
 	tryTakeTMVar,
 	tryPutTMVar,
@@ -115,16 +116,19 @@ tryPutTMVar (TMVar t) a = do
     Nothing -> do writeTVar t (Just a); return True
     Just _  -> return False
 
-{-|
-  This is a combination of 'takeTMVar' and 'putTMVar'; ie. it takes the value
-  from the 'TMVar', puts it back, and also returns it.
--}
+-- | This is a combination of 'takeTMVar' and 'putTMVar'; ie. it
+-- takes the value from the 'TMVar', puts it back, and also returns
+-- it.
 readTMVar :: TMVar a -> STM a
 readTMVar (TMVar t) = do
   m <- readTVar t
   case m of
     Nothing -> retry
     Just a  -> return a
+
+-- | Non-blocking version of 'readTMVar'.
+tryReadTMVar :: TMVar a -> STM (Maybe a)
+tryReadTMVar (TMVar t) = readTVar t
 
 -- |Swap the contents of a 'TMVar' for a new value.
 swapTMVar :: TMVar a -> a -> STM a
