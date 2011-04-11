@@ -23,9 +23,6 @@ module Control.Concurrent.STM.TChan (
 	newTChan,
 	newTChanIO,
 	readTChan,
-	tryReadTChan,
-	peekTChan,
-	tryPeekTChan,
 	writeTChan,
 	dupTChan,
 	unGetTChan,
@@ -81,36 +78,6 @@ readTChan (TChan read _write) = do
     TCons a tail -> do
 	writeTVar read tail
 	return a
-
--- | Non-blocking version of 'readTChan'.
-tryReadTChan :: TChan a -> STM (Maybe a)
-tryReadTChan (TChan read _write) = do
-  listhead <- readTVar read
-  head <- readTVar listhead
-  case head of
-    TNil       -> return Nothing
-    TCons a tl -> do
-      writeTVar read tl
-      return (Just a)
-
--- | Get the next value from the 'TChan' without removing it,
--- blocking if the channel is empty.
-peekTChan :: TChan a -> STM a
-peekTChan (TChan read _write) = do
-  listhead <- readTVar read
-  head <- readTVar listhead
-  case head of
-    TNil      -> retry
-    TCons a _ -> return a
-
--- | Non-blocking version of 'peekTChan'.
-tryPeekTChan :: TChan a -> STM (Maybe a)
-tryPeekTChan (TChan read _write) = do
-  listhead <- readTVar read
-  head <- readTVar listhead
-  case head of
-    TNil      -> return Nothing
-    TCons a _ -> return (Just a)
 
 -- |Duplicate a 'TChan': the duplicate channel begins empty, but data written to
 -- either channel from then on will be available from both.  Hence this creates
