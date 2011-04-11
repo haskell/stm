@@ -16,10 +16,10 @@ module Control.Concurrent.STM.TVar (
 	-- * TVars
 	TVar,
 	newTVar,
-	readTVar,
-	writeTVar,
 	newTVarIO,
-        readTVarIO,
+	readTVar,
+	readTVarIO,
+	writeTVar,
 #ifdef __GLASGOW_HASKELL__
 	registerDelay
 #endif
