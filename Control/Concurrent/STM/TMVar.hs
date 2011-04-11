@@ -126,7 +126,8 @@ readTMVar (TMVar t) = do
     Nothing -> retry
     Just a  -> return a
 
--- | Non-blocking version of 'readTMVar'.
+-- | A version of 'readTMVar' which does not retry. Instead it
+-- returns @Nothing@ if no value is available.
 tryReadTMVar :: TMVar a -> STM (Maybe a)
 tryReadTMVar (TMVar t) = readTVar t
 
