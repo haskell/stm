@@ -10,17 +10,17 @@ main = do
   x <- atomically ( newTVar 42 )
 
   putStr "\nAdding trivially true invariant (no TVar access)\n"
-  atomically ( alwaysSucceeds ( return 1 ) ) 
+  atomically ( alwaysSucceeds ( return 1 ) )
 
   putStr "\nAdding trivially true invariant (no TVar access)\n"
-  atomically ( always ( return True ) ) 
+  atomically ( always ( return True ) )
 
   putStr "\nAdding a trivially true invariant (TVar access)\n"
-  atomically ( alwaysSucceeds ( readTVar x ) ) 
+  atomically ( alwaysSucceeds ( readTVar x ) )
 
   putStr "\nAdding an invraiant that's false when attemted to be added\n"
   Control.Exception.catch (atomically ( do writeTVar x 100
-                                           alwaysSucceeds ( do v <- readTVar x 
+                                           alwaysSucceeds ( do v <- readTVar x
                                                                if (v == 100) then throw (ErrorCall "URK") else return () )
                                            writeTVar x 0 ) )
       (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
@@ -29,7 +29,7 @@ main = do
   atomically ( writeTVar x 17 )
 
   putStr "\nAdding a second trivially true invariant (same TVar access)\n"
-  atomically ( alwaysSucceeds ( readTVar x ) ) 
+  atomically ( alwaysSucceeds ( readTVar x ) )
 
   putStr "\nWriting to a TVar watched by both trivially true invariants\n"
   atomically ( writeTVar x 18 )
@@ -47,7 +47,7 @@ main = do
       (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
 
   putStr "\nAdding a trivially false invariant (with TVar access)\n"
-  Control.Exception.catch (atomically ( 
+  Control.Exception.catch (atomically (
                 alwaysSucceeds ( do t <- readTVar x
                                     throw (ErrorCall "Exn raised in invariant") ) ) )
       (\(e::SomeException) -> putStr ("Caught: " ++ (show e) ++ "\n"))
@@ -65,4 +65,4 @@ main = do
   putStr ("Final value = " ++ (show t) ++ "\n")
 
   putStr "\nDone\n"
-         
+
