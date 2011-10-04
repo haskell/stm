@@ -18,7 +18,7 @@ main = do
   putStr "\nAdding a trivially true invariant (TVar access)\n"
   atomically ( alwaysSucceeds ( readTVar x ) )
 
-  putStr "\nAdding an invraiant that's false when attemted to be added\n"
+  putStr "\nAdding an invariant that's false when attempted to be added\n"
   Control.Exception.catch (atomically ( do writeTVar x 100
                                            alwaysSucceeds ( do v <- readTVar x
                                                                if (v == 100) then throw (ErrorCall "URK") else return () )

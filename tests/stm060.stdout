@@ -7,7 +7,7 @@ Adding trivially true invariant (no TVar access)
 
 Adding a trivially true invariant (TVar access)
 
-Adding an invraiant that's false when attemted to be added
+Adding an invariant that's false when attempted to be added
 Caught: URK
 
 Writing to a TVar watched by a trivially true invariant
@@ -23,7 +23,7 @@ Adding a trivially false invariant (no TVar access)
 Caught: Exn raised in invariant
 
 Adding a trivially false invariant (no TVar access)
-Caught: Transacional invariant violation
+Caught: Transactional invariant violation
 
 Adding a trivially false invariant (with TVar access)
 Caught: Exn raised in invariant
