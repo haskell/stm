@@ -140,11 +140,6 @@ swapTMVar (TMVar t) new = do
     Just old -> do writeTVar t (Just new); return old
 
 -- |Check whether a given 'TMVar' is empty.
---
--- Notice that the boolean value returned  is just a snapshot of
--- the state of the 'TMVar'. By the time you get to react on its result,
--- the 'TMVar' may have been filled (or emptied) - so be extremely
--- careful when using this operation.   Use 'tryTakeTMVar' instead if possible.
 isEmptyTMVar :: TMVar a -> STM Bool
 isEmptyTMVar (TMVar t) = do
   m <- readTVar t
