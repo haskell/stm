@@ -2,6 +2,12 @@
 -- Transactions do not run concurrently, but are atomic in the face
 -- of exceptions.
 
+{-# LANGUAGE CPP #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
+
 -- #hide
 module Control.Sequential.STM (
 	STM, atomically, throwSTM, catchSTM,

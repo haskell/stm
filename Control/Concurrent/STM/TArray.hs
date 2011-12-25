@@ -1,5 +1,9 @@
 {-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances, MultiParamTypeClasses #-}
 
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TArray

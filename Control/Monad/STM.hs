@@ -1,5 +1,10 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-{-# LANGUAGE MagicHash, UnboxedTuples #-}
+{-# LANGUAGE CPP, MagicHash, UnboxedTuples #-}
+
+#if __GLASGOW_HASKELL__ >= 701
+{-# LANGUAGE Trustworthy #-}
+#endif
+
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Monad.STM
