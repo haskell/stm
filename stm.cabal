@@ -7,7 +7,11 @@ synopsis:	Software Transactional Memory
 category:       Concurrency
 description:	A modular composable concurrency abstraction.
 build-type:     Simple
-cabal-version:  >=1.2
+cabal-version:  >=1.6
+
+source-repository head
+    type:     git
+    location: http://darcs.haskell.org/packages/stm.git/
 
 flag base4
 
