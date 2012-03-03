@@ -53,7 +53,7 @@ data TChan a = TChan _UPK_(TVar (TVarList a))
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a _UPK_(TVarList a)
 
--- |Build and returns a new instance of 'TChan'
+-- |Build and return a new instance of 'TChan'
 newTChan :: STM (TChan a)
 newTChan = do
   hole <- newTVar TNil
