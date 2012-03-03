@@ -26,6 +26,8 @@ module Control.Concurrent.STM.TChan (
 	TChan,
 	newTChan,
 	newTChanIO,
+	newBroadcastTChan,
+	newBroadcastTChanIO,
 	readTChan,
 	tryReadTChan,
 	peekTChan,
@@ -71,6 +73,40 @@ newTChanIO = do
   read <- newTVarIO hole
   write <- newTVarIO hole
   return (TChan read write)
+
+-- | Create a write-only 'TChan'.  More precisely, 'readTChan' will 'retry'
+-- even after items have been written to the channel.  The only way to read
+-- a broadcast channel is to duplicate it with 'dupTChan'.
+--
+-- Consider a server that broadcasts messages to clients:
+--
+-- >serve :: TChan Message -> Client -> IO loop
+-- >serve broadcastChan client = do
+-- >    myChan <- dupTChan broadcastChan
+-- >    forever $ do
+-- >        message <- readTChan myChan
+-- >        send client message
+--
+-- The problem with using 'newTChan' to create the broadcast channel is that if
+-- it is only written to and never read, items will pile up in memory.  By
+-- using 'newBroadcastTChan' to create the broadcast channel, items can be
+-- garbage collected after clients have seen them.
+newBroadcastTChan :: STM (TChan a)
+newBroadcastTChan = do
+    dummy_hole <- newTVar TNil
+    write_hole <- newTVar TNil
+    read <- newTVar dummy_hole
+    write <- newTVar write_hole
+    return (TChan read write)
+
+-- | @IO@ version of 'newBroadcastTChan'.
+newBroadcastTChanIO :: IO (TChan a)
+newBroadcastTChanIO = do
+    dummy_hole <- newTVarIO TNil
+    write_hole <- newTVarIO TNil
+    read <- newTVarIO dummy_hole
+    write <- newTVarIO write_hole
+    return (TChan read write)
 
 -- |Write a value to a 'TChan'.
 writeTChan :: TChan a -> a -> STM ()
