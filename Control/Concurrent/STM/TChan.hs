@@ -48,7 +48,7 @@ import Data.Typeable (Typeable)
 -- | 'TChan' is an abstract type representing an unbounded FIFO channel.
 data TChan a = TChan _UPK_(TVar (TVarList a))
                      _UPK_(TVar (TVarList a))
-  deriving Typeable
+  deriving (Eq, Typeable)
 
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a _UPK_(TVarList a)
