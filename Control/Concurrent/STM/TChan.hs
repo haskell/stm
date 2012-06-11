@@ -33,7 +33,8 @@ module Control.Concurrent.STM.TChan (
 	writeTChan,
 	dupTChan,
 	unGetTChan,
-	isEmptyTChan
+        isEmptyTChan,
+        cloneTChan
 #endif
   ) where
 
@@ -143,4 +144,12 @@ isEmptyTChan (TChan read _write) = do
   case head of
     TNil -> return True
     TCons _ _ -> return False
+
+-- |Clone a 'TChan': similar to dupTChan, but the cloned channel starts with the
+-- same content available as the original channel.
+cloneTChan :: TChan a -> STM (TChan a)
+cloneTChan (TChan read write) = do
+  readpos <- readTVar read
+  new_read <- newTVar readpos
+  return (TChan new_read write)
 #endif
