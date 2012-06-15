@@ -22,6 +22,7 @@ library
     Control.Concurrent.STM.TVar
     Control.Concurrent.STM.TChan
     Control.Concurrent.STM.TMVar
+    Control.Concurrent.STM.TQueue
     Control.Monad.STM
   other-modules:
     Control.Sequential.STM
