@@ -29,7 +29,8 @@ module Control.Concurrent.STM (
 	module Control.Concurrent.STM.TVar,
 #ifdef __GLASGOW_HASKELL__
 	module Control.Concurrent.STM.TMVar,
-	module Control.Concurrent.STM.TChan,
+        module Control.Concurrent.STM.TChan,
+        module Control.Concurrent.STM.TQueue,
 #endif
 	module Control.Concurrent.STM.TArray
   ) where
@@ -41,3 +42,4 @@ import Control.Concurrent.STM.TMVar
 import Control.Concurrent.STM.TChan
 #endif
 import Control.Concurrent.STM.TArray
+import Control.Concurrent.STM.TQueue
