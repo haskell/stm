@@ -14,7 +14,9 @@ module Control.Sequential.STM (
 	TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar
     ) where
 
+#if __GLASGOW_HASKELL__ < 705
 import Prelude hiding (catch)
+#endif
 import Control.Applicative (Applicative(pure, (<*>)))
 import Control.Exception
 import Data.IORef
