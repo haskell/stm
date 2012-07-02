@@ -24,17 +24,21 @@ module Control.Concurrent.STM.TChan (
 #ifdef __GLASGOW_HASKELL__
 	-- * TChans
 	TChan,
-	newTChan,
+
+        -- ** Construction
+        newTChan,
 	newTChanIO,
 	newBroadcastTChan,
 	newBroadcastTChanIO,
+        dupTChan,
+
+        -- ** Reading and writing
 	readTChan,
 	tryReadTChan,
 	peekTChan,
 	tryPeekTChan,
 	writeTChan,
-	dupTChan,
-	unGetTChan,
+        unGetTChan,
         isEmptyTChan,
         cloneTChan
 #endif
