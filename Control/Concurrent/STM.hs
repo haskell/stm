@@ -31,6 +31,7 @@ module Control.Concurrent.STM (
 	module Control.Concurrent.STM.TMVar,
         module Control.Concurrent.STM.TChan,
         module Control.Concurrent.STM.TQueue,
+        module Control.Concurrent.STM.TBQueue,
 #endif
 	module Control.Concurrent.STM.TArray
   ) where
@@ -43,3 +44,4 @@ import Control.Concurrent.STM.TChan
 #endif
 import Control.Concurrent.STM.TArray
 import Control.Concurrent.STM.TQueue
+import Control.Concurrent.STM.TBQueue

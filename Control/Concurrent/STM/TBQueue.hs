@@ -40,8 +40,8 @@ module Control.Concurrent.STM.TBQueue (
         isEmptyTBQueue,
   ) where
 
-
-import Control.Concurrent.STM
+import Data.Typeable
+import GHC.Conc
 
 #define _UPK_(x) {-# UNPACK #-} !(x)
 
@@ -51,6 +51,7 @@ data TBQueue a
              _UPK_(TVar [a])  -- R:  elements waiting to be read
              _UPK_(TVar Int)  -- CW: write capacity
              _UPK_(TVar [a])  -- W:  elements written (head is most recent)
+  deriving Typeable
 
 instance Eq (TBQueue a) where
   TBQueue a _ _ _ == TBQueue b _ _ _ = a == b
