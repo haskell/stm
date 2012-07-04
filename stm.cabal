@@ -1,11 +1,22 @@
 name:		stm
-version:        2.3
+version:        2.4
 license:	BSD3
 license-file:	LICENSE
 maintainer:	libraries@haskell.org
 synopsis:	Software Transactional Memory
 category:       Concurrency
-description:	A modular composable concurrency abstraction.
+description:
+ A modular composable concurrency abstraction.
+ .
+ Changes in version 2.4
+ .
+ * Added "Control.Concurrent.STM.TQueue" (a faster @TChan@)
+ * Added "Control.Concurrent.STM.TBQueue" (a bounded channel based on @TQueue@)
+ * @TChan@ has an @Eq@ instances
+ * Added @newBroadcastTChan@ and @newBroadcastTChanIO@
+ * Some performance improvements for @TChan@
+ * Added @cloneTChan@
+
 build-type:     Simple
 cabal-version:  >=1.6
 
@@ -23,6 +34,7 @@ library
     Control.Concurrent.STM.TChan
     Control.Concurrent.STM.TMVar
     Control.Concurrent.STM.TQueue
+    Control.Concurrent.STM.TBQueue
     Control.Monad.STM
   other-modules:
     Control.Sequential.STM
