@@ -11,10 +11,15 @@ description:
  Changes in version 2.4
  .
  * Added "Control.Concurrent.STM.TQueue" (a faster @TChan@)
+ .
  * Added "Control.Concurrent.STM.TBQueue" (a bounded channel based on @TQueue@)
+ .
  * @TChan@ has an @Eq@ instances
+ .
  * Added @newBroadcastTChan@ and @newBroadcastTChanIO@
+ .
  * Some performance improvements for @TChan@
+ .
  * Added @cloneTChan@
 
 build-type:     Simple
