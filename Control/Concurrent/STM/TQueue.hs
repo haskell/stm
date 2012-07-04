@@ -53,6 +53,9 @@ data TQueue a = TQueue {-# UNPACK #-} !(TVar [a])
                        {-# UNPACK #-} !(TVar [a])
   deriving Typeable
 
+instance Eq (TQueue a) where
+  TQueue a _ == TQueue b _ = a == b
+
 -- |Build and returns a new instance of 'TQueue'
 newTQueue :: STM (TQueue a)
 newTQueue = do

@@ -52,6 +52,9 @@ data TBQueue a
              _UPK_(TVar Int)  -- CW: write capacity
              _UPK_(TVar [a])  -- W:  elements written (head is most recent)
 
+instance Eq (TBQueue a) where
+  TBQueue a _ _ _ == TBQueue b _ _ _ = a == b
+
 -- Total channel capacity remaining is CR + CW. Reads only need to
 -- access CR, writes usually need to access only CW but sometimes need
 -- CR.  So in the common case we avoid contention between CR and CW.
