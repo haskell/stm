@@ -6,13 +6,15 @@ import System.Environment
 import Control.Concurrent.Chan
 import Control.Concurrent.STM
 import Control.Concurrent.STM.TQueue
+import Control.Concurrent.STM.TBQueue
 
 -- Using CPP rather than a runtime choice between channel types,
 -- because we want the compiler to be able to optimise the calls.
 
-#define CHAN
+-- #define CHAN
 -- #define TCHAN
 -- #define TQUEUE
+-- #define TBQUEUE
 
 #ifdef CHAN
 newc = newChan
@@ -26,6 +28,10 @@ writec c x = atomically $ writeTChan c x
 newc = newTQueueIO
 readc c = atomically $ readTQueue c
 writec c x = atomically $ writeTQueue c x
+#elif defined(TBQUEUE)
+newc = newTBQueueIO 4096
+readc c = atomically $ readTBQueue c
+writec c x = atomically $ writeTBQueue c x
 #endif
 
 main = do
@@ -47,7 +53,7 @@ runtest n test = do
       replicateM_ n $ writec c (1 :: Int)
       replicateM_ n $ readc c
     2 -> do
-      let n10 = n `quot` 10
-      replicateM_ 10 $ do
-        replicateM_ n10 $ writec c (1 :: Int)
-        replicateM_ n10 $ readc c
+      let n1000 = n `quot` 1000
+      replicateM_ 1000 $ do
+        replicateM_ n1000 $ writec c (1 :: Int)
+        replicateM_ n1000 $ readc c
