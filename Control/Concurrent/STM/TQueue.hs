@@ -31,7 +31,7 @@
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TQueue (
-        -- * TChans
+        -- * TQueue
 	TQueue,
 	newTQueue,
 	newTQueueIO,
