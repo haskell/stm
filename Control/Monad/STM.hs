@@ -62,8 +62,8 @@ instance MonadPlus STM where
   mplus = orElse
 #endif
 
-check :: Bool -> STM a
-check b = if b then return undefined else retry
+check :: Bool -> STM ()
+check b = if b then return () else retry
 #endif
 
 #if ! (MIN_VERSION_base(4,3,0))
