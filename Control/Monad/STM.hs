@@ -55,11 +55,23 @@ import Control.Monad.Fix
 import Control.Sequential.STM
 #endif
 
+import Control.Applicative
+import Control.Monad (ap)
+
+
 #ifdef __GLASGOW_HASKELL__
 #if ! (MIN_VERSION_base(4,3,0))
 instance MonadPlus STM where
   mzero = retry
   mplus = orElse
+
+instance Applicative STM where
+  pure = return
+  (<*>) = ap
+
+instance Alternative STM where
+  empty = retry
+  (<|>) = orElse
 #endif
 
 check :: Bool -> STM ()
