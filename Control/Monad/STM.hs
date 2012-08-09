@@ -55,8 +55,12 @@ import Control.Monad.Fix
 import Control.Sequential.STM
 #endif
 
+#ifdef __GLASGOW_HASKELL__
+#if ! (MIN_VERSION_base(4,3,0))
 import Control.Applicative
 import Control.Monad (ap)
+#endif
+#endif
 
 
 #ifdef __GLASGOW_HASKELL__
