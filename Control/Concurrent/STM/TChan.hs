@@ -97,9 +97,8 @@ newTChanIO = do
 -- garbage collected after clients have seen them.
 newBroadcastTChan :: STM (TChan a)
 newBroadcastTChan = do
-    dummy_hole <- newTVar TNil
     write_hole <- newTVar TNil
-    read <- newTVar dummy_hole
+    read <- newTVar (error "reading from a TChan created by newBroadcastTChan; use dupTChan first")
     write <- newTVar write_hole
     return (TChan read write)
 
