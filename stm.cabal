@@ -1,5 +1,5 @@
 name:		stm
-version:        2.4.1
+version:        2.4.2
 license:	BSD3
 license-file:	LICENSE
 maintainer:	libraries@haskell.org
@@ -7,6 +7,10 @@ synopsis:	Software Transactional Memory
 category:       Concurrency
 description:
  A modular composable concurrency abstraction.
+ .
+ Changes in version 2.4.2
+ .
+ * Added "Control.Concurrent.STM.TSem" (transactional semaphore)
  .
  Changes in version 2.4.1
  .
@@ -44,6 +48,7 @@ library
     Control.Concurrent.STM.TMVar
     Control.Concurrent.STM.TQueue
     Control.Concurrent.STM.TBQueue
+    Control.Concurrent.STM.TSem
     Control.Monad.STM
   other-modules:
     Control.Sequential.STM
