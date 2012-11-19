@@ -20,7 +20,6 @@ module Control.Concurrent.STM.TSem (
 import Control.Concurrent.STM
 import Control.Monad
 import Data.Typeable
-import Control.Exception
 
 -- | 'TSem' is a transactional semaphore.  It holds a certain number
 -- of units, and units may be acquired or released by 'waitTSem' and
