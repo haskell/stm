@@ -31,6 +31,7 @@ module Control.Concurrent.STM.TChan (
 	newBroadcastTChan,
 	newBroadcastTChanIO,
         dupTChan,
+        cloneTChan,
 
         -- ** Reading and writing
 	readTChan,
@@ -39,8 +40,7 @@ module Control.Concurrent.STM.TChan (
 	tryPeekTChan,
 	writeTChan,
         unGetTChan,
-        isEmptyTChan,
-        cloneTChan
+        isEmptyTChan
 #endif
   ) where
 
