@@ -105,9 +105,8 @@ newBroadcastTChan = do
 -- | @IO@ version of 'newBroadcastTChan'.
 newBroadcastTChanIO :: IO (TChan a)
 newBroadcastTChanIO = do
-    dummy_hole <- newTVarIO TNil
     write_hole <- newTVarIO TNil
-    read <- newTVarIO dummy_hole
+    read <- newTVarIO (error "reading from a TChan created by newBroadcastTChanIO; use dupTChan first")
     write <- newTVarIO write_hole
     return (TChan read write)
 
