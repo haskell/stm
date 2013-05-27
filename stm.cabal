@@ -1,5 +1,5 @@
 name:		stm
-version:        2.4.2
+version:        2.4.2.1
 license:	BSD3
 license-file:	LICENSE
 maintainer:	libraries@haskell.org
@@ -7,6 +7,12 @@ synopsis:	Software Transactional Memory
 category:       Concurrency
 description:
  A modular composable concurrency abstraction.
+ .
+ Changes in version 2.4.2.1
+ .
+ * Updated behaviour of @newBroadcastTChanIO@ to match
+   @newBroadcastTChan@ in causing an error on a read from
+   the broadcast channel.
  .
  Changes in version 2.4.2
  .
