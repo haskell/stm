@@ -38,6 +38,7 @@ module Control.Concurrent.STM.TBQueue (
 	writeTBQueue,
         unGetTBQueue,
         isEmptyTBQueue,
+        isFullTBQueue,
   ) where
 
 import Data.Typeable
@@ -177,3 +178,15 @@ isEmptyTBQueue (TBQueue _rsize read _wsize write) = do
              case ys of
                [] -> return True
                _  -> return False
+
+-- |Returns 'True' if the supplied 'TBQueue' is full.
+isFullTBQueue :: TBQueue a -> STM Bool
+isFullTBQueue (TBQueue rsize _read wsize _write) = do
+  w <- readTVar wsize
+  if (w > 0)
+     then return False
+     else do
+         r <- readTVar rsize
+         if (r > 0)
+            then return False
+            else return True
