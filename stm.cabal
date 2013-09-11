@@ -35,7 +35,7 @@ cabal-version:  >=1.6
 
 source-repository head
     type:     git
-    location: http://darcs.haskell.org/packages/stm.git/
+    location: http://git.haskell.org/packages/stm.git
 
 flag base4
 
