@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, MagicHash, UnboxedTuples #-}
 
 #if __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Trustworthy #-}
@@ -30,12 +30,15 @@ module Control.Concurrent.STM.TVar (
 	modifyTVar',
 	swapTVar,
 #ifdef __GLASGOW_HASKELL__
-	registerDelay
+        registerDelay,
 #endif
+        mkWeakTVar
   ) where
 
 #ifdef __GLASGOW_HASKELL__
+import GHC.Base
 import GHC.Conc
+import GHC.Weak
 #else
 import Control.Sequential.STM
 #endif
@@ -72,3 +75,9 @@ swapTVar var new = do
     return old
 {-# INLINE swapTVar #-}
 
+
+-- | Make a 'Weak' pointer to a 'TVar', using the second argument as
+-- a finalizer to run when 'TVar' is garbage-collected
+mkWeakTVar :: TVar a -> IO () -> IO (Weak (TVar a))
+mkWeakTVar t@(TVar t#) f = IO $ \s ->
+    case mkWeak# t# t f s of (# s1, w #) -> (# s1, Weak w #)
