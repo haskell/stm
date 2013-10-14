@@ -1,68 +1,55 @@
-name:		stm
+name:           stm
 version:        2.4.2.1
-license:	BSD3
-license-file:	LICENSE
-maintainer:	libraries@haskell.org
-synopsis:	Software Transactional Memory
+license:        BSD3
+license-file:   LICENSE
+maintainer:     libraries@haskell.org
+bug-reports:    http://ghc.haskell.org/trac/ghc/newticket?component=libraries%20%28other%29&keywords=stm
+synopsis:       Software Transactional Memory
 category:       Concurrency
-description:
- A modular composable concurrency abstraction.
- .
- Changes in version 2.4.2.1
- .
- * Updated behaviour of @newBroadcastTChanIO@ to match
-   @newBroadcastTChan@ in causing an error on a read from
-   the broadcast channel.
- .
- Changes in version 2.4.2
- .
- * Added "Control.Concurrent.STM.TSem" (transactional semaphore)
- .
- Changes in version 2.4.1
- .
- * Added Applicative/Alternative instances of STM for GHC <7.0
- .
- Changes in version 2.4
- .
- * Added "Control.Concurrent.STM.TQueue" (a faster @TChan@)
- .
- * Added "Control.Concurrent.STM.TBQueue" (a bounded channel based on @TQueue@)
- .
- * @TChan@ has an @Eq@ instances
- .
- * Added @newBroadcastTChan@ and @newBroadcastTChanIO@
- .
- * Some performance improvements for @TChan@
- .
- * Added @cloneTChan@
-
+description:    A modular composable concurrency abstraction.
 build-type:     Simple
-cabal-version:  >=1.6
+cabal-version:  >=1.10
+tested-with:    GHC==7.6.3, GHC==7.6.2, GHC==7.6.1, GHC==7.4.2, GHC==7.4.1, GHC==7.2.2, GHC==7.2.1, GHC==7.0.4, GHC==7.0.3, GHC==7.0.2, GHC==7.0.1, GHC==6.12.3
+
+extra-source-files:
+    changelog
 
 source-repository head
     type:     git
     location: http://git.haskell.org/packages/stm.git
 
-flag base4
+source-repository this
+    type:     git
+    location: http://git.haskell.org/packages/stm.git
+    tag:      stm-2.4.2.1-release
 
 library
-  exposed-modules:
-    Control.Concurrent.STM
-    Control.Concurrent.STM.TArray
-    Control.Concurrent.STM.TVar
-    Control.Concurrent.STM.TChan
-    Control.Concurrent.STM.TMVar
-    Control.Concurrent.STM.TQueue
-    Control.Concurrent.STM.TBQueue
-    Control.Concurrent.STM.TSem
-    Control.Monad.STM
-  other-modules:
-    Control.Sequential.STM
-  build-depends: base < 5, array
-  if flag(base4)
-    build-depends: base >=4
-    cpp-options:   -DBASE4
-  else
-    build-depends: base <4
-  if impl(ghc >= 6.10)
-    build-depends: base >=4
+    default-language: Haskell98
+    other-extensions:
+        CPP
+        DeriveDataTypeable
+        FlexibleInstances
+        MagicHash
+        MultiParamTypeClasses
+        UnboxedTuples
+    if impl(ghc >= 7.2)
+        other-extensions: Trustworthy
+
+    build-depends:
+        base  >= 4.2 && < 4.8,
+        array >= 0.3 && < 0.6
+
+    exposed-modules:
+        Control.Concurrent.STM
+        Control.Concurrent.STM.TArray
+        Control.Concurrent.STM.TVar
+        Control.Concurrent.STM.TChan
+        Control.Concurrent.STM.TMVar
+        Control.Concurrent.STM.TQueue
+        Control.Concurrent.STM.TBQueue
+        Control.Concurrent.STM.TSem
+        Control.Monad.STM
+    other-modules:
+        Control.Sequential.STM
+
+    ghc-options: -Wall

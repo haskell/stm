@@ -1,0 +1,38 @@
+-*-changelog-*-
+
+2.4.2.1  Oct 2013
+
+	* Updated behaviour of `newBroadcastTChanIO` to match
+	`newBroadcastTChan` in causing an error on a read from
+	the broadcast channel
+
+	* Add `mkWeakTVar`
+
+	* Add `isFullTBQueue`
+
+	* Fix `TChan` created via `newBroadcastTChanIO` to throw same
+	exception on a `readTChan` as when created via `newBroadcastTChan`
+
+2.4.2  Nov 2012
+
+	* Add "Control.Concurrent.STM.TSem" (transactional semaphore)
+
+	* Add Applicative/Alternative instances of STM for GHC <7.0
+
+        * Throw proper exception when `readTChan` called on a broadcast
+	`TChan`
+
+2.4  Jul 2012
+
+	* Add "Control.Concurrent.STM.TQueue" (a faster `TChan`)
+
+	* Add "Control.Concurrent.STM.TBQueue" (a bounded channel based on
+	`TQueue`)
+
+	* Add `Eq` instance for `TChan`
+
+	* Add `newBroadcastTChan` and `newBroadcastTChanIO`
+
+	* Some performance improvements for `TChan`
+
+	* Add `cloneTChan`

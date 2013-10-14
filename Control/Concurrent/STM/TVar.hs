@@ -43,11 +43,6 @@ import GHC.Weak
 import Control.Sequential.STM
 #endif
 
-#if ! (MIN_VERSION_base(4,2,0))
-readTVarIO = atomically . readTVar
-#endif
-
-
 -- Like 'modifyIORef' but for 'TVar'.
 -- | Mutate the contents of a 'TVar'. /N.B./, this version is
 -- non-strict.
