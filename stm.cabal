@@ -1,5 +1,5 @@
 name:           stm
-version:        2.4.2.1
+version:        2.4.3
 license:        BSD3
 license-file:   LICENSE
 maintainer:     libraries@haskell.org
@@ -12,7 +12,7 @@ cabal-version:  >=1.10
 tested-with:    GHC==7.6.3, GHC==7.6.2, GHC==7.6.1, GHC==7.4.2, GHC==7.4.1, GHC==7.2.2, GHC==7.2.1, GHC==7.0.4, GHC==7.0.3, GHC==7.0.2, GHC==7.0.1, GHC==6.12.3
 
 extra-source-files:
-    changelog
+    changelog.md
 
 source-repository head
     type:     git
@@ -21,7 +21,7 @@ source-repository head
 source-repository this
     type:     git
     location: http://git.haskell.org/packages/stm.git
-    tag:      stm-2.4.2.1-release
+    tag:      stm-2.4.3-release
 
 library
     default-language: Haskell98
