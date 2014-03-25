@@ -200,8 +200,10 @@ directoryPoster2 n state
   The DirectoryService main process.
 -}
 directoryService
- = do [s] <- getArgs
-      let n = read s :: Int
+ = do args <- getArgs
+      n <- case args of
+        []  -> return 10000
+        [s] -> return (read s :: Int)
 
       c <- atomically (newTChan)
       t <- atomically (newTVar [])
