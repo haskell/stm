@@ -1,6 +1,6 @@
 -- STM stress test
 
-{-# OPTIONS -fffi #-}
+{-# LANGUAGE ForeignFunctionInterface #-}
 module Main (main) where
 
 import Foreign
