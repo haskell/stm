@@ -15,8 +15,8 @@ ghc_minver () {
 
 # hard-coded exceptions
 may_fail () {
-    if [ "$1" = "stm064" ] && ! ghc_minver "7.6"; then
-        echo "EXPECTED FAIL: '$1' may fail for GHC < 7.6"
+    if [ "$1" = "stm064" ] && ! ghc_minver "7.6.2"; then
+        echo "EXPECTED FAIL: '$1' may fail for GHC < 7.6.2"
         return 0
     fi
 
