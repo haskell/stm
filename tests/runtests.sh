@@ -4,9 +4,28 @@
 
 set -e
 
+GHCVER=$(ghc --numeric-version)
+
+echo "using GHC version: $GHCVER"
+
+# checks if GHC version >= $1
+ghc_minver () {
+    [ "$1" = "$(echo -e "$1\n${GHCVER}" | sort -V | head -n1)" ]
+}
+
+# hard-coded exceptions
+may_fail () {
+    if [ "$1" = "stm064" ] && ! ghc_minver "7.6"; then
+        echo "EXPECTED FAIL: '$1' may fail for GHC < 7.6"
+        return 0
+    fi
+
+    return 1
+}
+
 die () {
-    echo "ERROR: $1" >&2;
-    exit 1;
+    echo "ERROR: $1" >&2
+    exit 1
 }
 
 [ -f tests/runtests.sh ] && cd tests/
@@ -30,9 +49,14 @@ for T in *.hs;do
             echo "ignoring ${FD} output"
             continue
         fi
+
+        # fixup typo in exception message for older GHCs
+        sed -i 's,Transacional invariant,Transactional invariant,g' "${T}.${FD}.run"
+
         echo "validate ${FD} output..."
         if [ -f "${T}.${FD}" ]; then REF="${T}.${FD}"; else REF=/dev/null; fi
-        diff -w -u ${REF} ${T}.${FD}.run
+
+        diff -w -u "${REF}" "${T}.${FD}.run" || may_fail "${T}"
     done
 
     echo "> '${T}' PASSED"
