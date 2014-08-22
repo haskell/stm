@@ -9,6 +9,7 @@
 *.run.stdout
 *.eventlog
 *.genscript
+*.normalised
 
 # Backup files
 *~
