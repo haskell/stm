@@ -1,5 +1,9 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.4.3.1  *TBA*
+
+  * Add support for `base-4.8.0.0`
+
 ## 2.4.3  *Mar 2014*
 
   * Update behaviour of `newBroadcastTChanIO` to match
