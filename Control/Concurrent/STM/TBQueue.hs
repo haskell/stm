@@ -10,7 +10,7 @@
 -- Module      :  Control.Concurrent.STM.TBQueue
 -- Copyright   :  (c) The University of Glasgow 2012
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -28,14 +28,14 @@
 
 module Control.Concurrent.STM.TBQueue (
         -- * TBQueue
-	TBQueue,
-	newTBQueue,
-	newTBQueueIO,
-	readTBQueue,
-	tryReadTBQueue,
-	peekTBQueue,
-	tryPeekTBQueue,
-	writeTBQueue,
+        TBQueue,
+        newTBQueue,
+        newTBQueueIO,
+        readTBQueue,
+        tryReadTBQueue,
+        peekTBQueue,
+        tryPeekTBQueue,
+        writeTBQueue,
         unGetTBQueue,
         isEmptyTBQueue,
         isFullTBQueue,

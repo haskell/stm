@@ -9,7 +9,7 @@
 -- Module      :  Control.Concurrent.STM.TVar
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -19,16 +19,16 @@
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TVar (
-	-- * TVars
-	TVar,
-	newTVar,
-	newTVarIO,
-	readTVar,
-	readTVarIO,
-	writeTVar,
-	modifyTVar,
-	modifyTVar',
-	swapTVar,
+        -- * TVars
+        TVar,
+        newTVar,
+        newTVarIO,
+        readTVar,
+        readTVarIO,
+        writeTVar,
+        modifyTVar,
+        modifyTVar',
+        swapTVar,
 #ifdef __GLASGOW_HASKELL__
         registerDelay,
 #endif

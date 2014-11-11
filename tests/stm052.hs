@@ -10,8 +10,8 @@ import GHC.Conc -- Control.Concurrent.STM
 import System.Random
 import Data.Array
 import Data.List
-import GHC.Conc 	( unsafeIOToSTM )
-import Control.Monad	( when )
+import GHC.Conc         ( unsafeIOToSTM )
+import Control.Monad    ( when )
 import System.IO
 import System.IO.Unsafe
 import System.Environment
@@ -35,16 +35,16 @@ thread :: TVar Int -> Elements -> IO ()
 thread done elements = loop iterations
  where loop 0 = atomically $ do x <- readTVar done; writeTVar done (x+1)
        loop n = do
-	  i1 <- randomRIO (1,n_elems)
-	  i2 <- randomRIO (1,n_elems)
-          let e1 = elements ! i1  
+          i1 <- randomRIO (1,n_elems)
+          i2 <- randomRIO (1,n_elems)
+          let e1 = elements ! i1
           let e2 = elements ! i2
-          atomically $ do 
+          atomically $ do
             e1_v <- readTVar e1
             e2_v <- readTVar e2
             writeTVar e1 e2_v
             writeTVar e2 e1_v
-	  loop (n-1)
+          loop (n-1)
 
 await_end :: TVar Int -> IO ()
 await_end done = atomically $ do x <- readTVar done
@@ -66,5 +66,3 @@ main = do
   mapM (\v -> putStr ((show v) ++ " " )) (sort fin_vals)
   putStr("\n")
   if ((sort fin_vals) == init_vals) then return () else throw (ErrorCall "Mismatch")
-
-

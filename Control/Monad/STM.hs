@@ -10,7 +10,7 @@
 -- Module      :  Control.Monad.STM
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -23,19 +23,19 @@
 --    and Practice of Parallel Programming/ 2005.
 --    <http://research.microsoft.com/Users/simonpj/papers/stm/index.htm>
 --
--- This module only defines the 'STM' monad; you probably want to 
+-- This module only defines the 'STM' monad; you probably want to
 -- import "Control.Concurrent.STM" (which exports "Control.Monad.STM").
 -----------------------------------------------------------------------------
 
 module Control.Monad.STM (
-  	STM,
-	atomically,
+        STM,
+        atomically,
 #ifdef __GLASGOW_HASKELL__
         always,
         alwaysSucceeds,
-	retry,
-	orElse,
-	check,
+        retry,
+        orElse,
+        check,
 #endif
         throwSTM,
         catchSTM

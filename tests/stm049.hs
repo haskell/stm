@@ -7,8 +7,8 @@ import Control.Concurrent
 import Control.Concurrent.STM
 import System.Random
 import Data.Array
-import GHC.Conc 	( unsafeIOToSTM )
-import Control.Monad	( when )
+import GHC.Conc         ( unsafeIOToSTM )
+import Control.Monad    ( when )
 import System.IO
 import System.IO.Unsafe
 import System.Environment
@@ -42,22 +42,22 @@ thread :: Int -> TVar Int -> Accounts -> IO ()
 thread tid done accounts = loop max_transactions
  where loop 0 = atomically $ do x <- readTVar done; writeTVar done (x+1)
        loop n = do
-	  src    <- randomRIO (1,n_accounts)
-	  dst    <- randomRIO (1,n_accounts)
-	  if (src == dst) then loop n else do
-	  amount <- randomRIO (1,max_transfer)
-	  start tid src dst amount
-	  atomically_ tid  $ do
-	    let src_acc = accounts ! src
-		dst_acc = accounts ! dst
-	    credit_src <- readTVar src_acc
-	    when (credit_src < amount) retry
-	    writeTVar src_acc (credit_src - amount)    
-	    credit_dst <- readTVar dst_acc
-	    writeTVar dst_acc (credit_dst + amount)    
-	  loop (n-1)
+          src    <- randomRIO (1,n_accounts)
+          dst    <- randomRIO (1,n_accounts)
+          if (src == dst) then loop n else do
+          amount <- randomRIO (1,max_transfer)
+          start tid src dst amount
+          atomically_ tid  $ do
+            let src_acc = accounts ! src
+                dst_acc = accounts ! dst
+            credit_src <- readTVar src_acc
+            when (credit_src < amount) retry
+            writeTVar src_acc (credit_src - amount)
+            credit_dst <- readTVar dst_acc
+            writeTVar dst_acc (credit_dst + amount)
+          loop (n-1)
 
-start tid src dst amount = 
+start tid src dst amount =
   puts ("start " ++ show tid ++ ' ':show src ++ ' ':show dst ++ ' ':show amount)
 
 main = do
@@ -67,8 +67,8 @@ main = do
   args <- getArgs
   case args of
    [n,m] -> let g = read (n ++ ' ':m) in setStdGen g
-   []    -> do g <- getStdGen 
-	       print g
+   []    -> do g <- getStdGen
+               print g
 -}
 
   -- for a deterministic run, we set the random seed explicitly:
@@ -98,21 +98,21 @@ sourceAccount  = 0 :: Int
 -- (source), and removing some cash from an account (sink).
 sourceSinkThread accounts = loop True
   where loop source = do
-	   amount <- randomRIO (1,max_source)
-	   acct   <- randomRIO (1,n_accounts)
-	   if source
-		then do start sourceThreadId sourceAccount acct amount
-		        transfer acct amount
-		else do start sourceThreadId acct sourceAccount amount
-		        transfer acct (-amount)
-	   loop (not source)
+           amount <- randomRIO (1,max_source)
+           acct   <- randomRIO (1,n_accounts)
+           if source
+                then do start sourceThreadId sourceAccount acct amount
+                        transfer acct amount
+                else do start sourceThreadId acct sourceAccount amount
+                        transfer acct (-amount)
+           loop (not source)
 
-	transfer acct amount = do
-	  let t = accounts ! acct
-	  atomically_ sourceThreadId $ do
-	    x <- readTVar t
-	    writeTVar t $! max 0 (x+amount) -- never drop below zero,
-					   -- and don't block.
+        transfer acct amount = do
+          let t = accounts ! acct
+          atomically_ sourceThreadId $ do
+            x <- readTVar t
+            writeTVar t $! max 0 (x+amount) -- never drop below zero,
+                                           -- and don't block.
 
     -- NB. $! above is necessary to avoid this test getting into a bad
     -- state.  The sourceSinkThread fills up all the accounts with
@@ -132,8 +132,8 @@ atomically_ tid stm = do
   r <- atomically $ do
     stmTrace ("execute " ++ show tid)
     r <- stm `orElse` do
-		stmTrace ("retry " ++ show tid)
-		retry
+                stmTrace ("retry " ++ show tid)
+                retry
     c <- readTVar commitVar
     writeTVar commitVar (tid:c)
     return r

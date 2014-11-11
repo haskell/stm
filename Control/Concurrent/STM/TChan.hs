@@ -10,7 +10,7 @@
 -- Module      :  Control.Concurrent.STM.TChan
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -22,23 +22,23 @@
 
 module Control.Concurrent.STM.TChan (
 #ifdef __GLASGOW_HASKELL__
-	-- * TChans
-	TChan,
+        -- * TChans
+        TChan,
 
         -- ** Construction
         newTChan,
-	newTChanIO,
-	newBroadcastTChan,
-	newBroadcastTChanIO,
+        newTChanIO,
+        newBroadcastTChan,
+        newBroadcastTChanIO,
         dupTChan,
         cloneTChan,
 
         -- ** Reading and writing
-	readTChan,
-	tryReadTChan,
-	peekTChan,
-	tryPeekTChan,
-	writeTChan,
+        readTChan,
+        tryReadTChan,
+        peekTChan,
+        tryPeekTChan,
+        writeTChan,
         unGetTChan,
         isEmptyTChan
 #endif
@@ -126,8 +126,8 @@ readTChan (TChan read _write) = do
   case head of
     TNil -> retry
     TCons a tail -> do
-	writeTVar read tail
-	return a
+        writeTVar read tail
+        return a
 
 -- | A version of 'readTChan' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
@@ -167,7 +167,7 @@ tryPeekTChan (TChan read _write) = do
 -- everyone else.
 dupTChan :: TChan a -> STM (TChan a)
 dupTChan (TChan _read write) = do
-  hole <- readTVar write  
+  hole <- readTVar write
   new_read <- newTVar hole
   return (TChan new_read write)
 

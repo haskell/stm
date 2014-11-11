@@ -10,8 +10,8 @@
 
 -- #hide
 module Control.Sequential.STM (
-	STM, atomically, throwSTM, catchSTM,
-	TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar
+        STM, atomically, throwSTM, catchSTM,
+        TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar
     ) where
 
 #if __GLASGOW_HASKELL__ < 705
@@ -37,15 +37,15 @@ instance Applicative STM where
 instance Monad STM where
     return = pure
     STM m >>= k = STM $ \ r -> do
-	x <- m r
-	unSTM (k x) r
+        x <- m r
+        unSTM (k x) r
 
 atomically :: STM a -> IO a
 atomically (STM m) = do
     r <- newIORef (return ())
     m r `onException` do
-	rollback <- readIORef r
-	rollback
+        rollback <- readIORef r
+        rollback
 
 throwSTM :: Exception e => e -> STM a
 throwSTM = STM . const . throwIO
@@ -57,13 +57,13 @@ catchSTM (STM m) h = STM $ \ r -> do
     res <- try (m r)
     rollback_m <- readIORef r
     case res of
-	Left ex -> do
-	    rollback_m
-	    writeIORef r old_rollback
-	    unSTM (h ex) r
-	Right a -> do
-	    writeIORef r (rollback_m >> old_rollback)
-	    return a
+        Left ex -> do
+            rollback_m
+            writeIORef r old_rollback
+            unSTM (h ex) r
+        Right a -> do
+            writeIORef r (rollback_m >> old_rollback)
+            return a
 
 newtype TVar a = TVar (IORef a)
     deriving (Eq)

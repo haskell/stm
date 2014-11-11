@@ -10,7 +10,7 @@
 -- Module      :  Control.Concurrent.STM.TQueue
 -- Copyright   :  (c) The University of Glasgow 2012
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -32,14 +32,14 @@
 
 module Control.Concurrent.STM.TQueue (
         -- * TQueue
-	TQueue,
-	newTQueue,
-	newTQueueIO,
-	readTQueue,
-	tryReadTQueue,
-	peekTQueue,
-	tryPeekTQueue,
-	writeTQueue,
+        TQueue,
+        newTQueue,
+        newTQueueIO,
+        readTQueue,
+        tryReadTQueue,
+        peekTQueue,
+        tryPeekTQueue,
+        writeTQueue,
         unGetTQueue,
         isEmptyTQueue,
   ) where

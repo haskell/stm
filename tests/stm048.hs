@@ -10,7 +10,7 @@ import System.IO
 -- Create two tvars each holding 0
 initTVars :: STM (TVar Int, TVar Int)
 initTVars = do v1 <- newTVar 0
-	       v2 <- newTVar 0
+               v2 <- newTVar 0
                return (v1, v2)
 
 -- Increment v1, retry
@@ -62,7 +62,7 @@ main = do newStablePtr stdout
           iteration 10
 
 iteration :: Int -> IO ()
-iteration n = 
+iteration n =
        do putStrLn ("Iter " ++ show n)
           (sv1, sv2) <- atomically ( initTVars )
 
@@ -99,6 +99,3 @@ iteration n =
 
           putStrLn "T7"
           if (n == 0) then return () else iteration (n - 1)
-
-
-

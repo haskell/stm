@@ -37,14 +37,6 @@ main = do newStablePtr stdout
           s1 <- Control.Exception.catch (atomically ( deadlock1 t1 ))
                    (\(e::SomeException) -> return ("Caught: " ++ (show e) ++ "\n"))
           putStr s1
-          
-
-	  return ()
 
 
-
-
-
-
-
-         
+          return ()

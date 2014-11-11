@@ -12,7 +12,7 @@ inc tv = do
 
 bad :: MVar () -> IO ()
 bad m = do { evaluate (1 `quot` 0); return () }
-	 `finally` putMVar m ()
+         `finally` putMVar m ()
 
 main :: IO ()
 main = do
@@ -22,4 +22,3 @@ main = do
   forkOS (bad m)
   takeMVar m
   threadDelay 100000 -- allow time for the exception to be printed
-

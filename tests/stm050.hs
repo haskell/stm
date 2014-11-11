@@ -12,7 +12,7 @@ import Control.Concurrent.STM
 import System.Environment
 import Control.Monad
 
-type Key = Int 
+type Key = Int
 
 type Value = Int
 
@@ -31,8 +31,8 @@ type DirectoryCommandCount = TVar Int
 
 -- The service's state
 data DirectoryState = DirectoryState {
-  chan :: DirectoryChannel, 
-  table :: DirectoryTable, 
+  chan :: DirectoryChannel,
+  table :: DirectoryTable,
   count :: DirectoryCommandCount }
 
 {-
@@ -74,7 +74,7 @@ dumpDirectoryTable t
 addDirectoryTable :: DirectoryTable -> DirectoryEntry -> IO ()
 addDirectoryTable t e@(key,value)
  = do atomically (do l <- readTVar t
-                     if filter (keyEquals key) l == [] 
+                     if filter (keyEquals key) l == []
                        then writeTVar t (e:l)
                        else writeTVar t l)
       -- putStrLn ("added (" ++ (show (fst e)) ++ "," ++ (show (snd e)) ++ ")")
@@ -90,7 +90,7 @@ postCommand c cmd = atomically (writeTChan c cmd)
 -}
 removeDirectoryTable :: DirectoryTable -> Key -> IO ()
 removeDirectoryTable t k
- = atomically (do l <- readTVar t 
+ = atomically (do l <- readTVar t
                   let newl = filter (keyNotEquals k) l
                   writeTVar t newl)
       -- putStrLn ("removed " ++ (show k))
@@ -98,10 +98,10 @@ removeDirectoryTable t k
 {-
   Find a DirectoryEntry in a DirectoryTable.
 -}
-findDirectoryTable :: DirectoryTable -> Key -> IO DirectoryEntryList 
+findDirectoryTable :: DirectoryTable -> Key -> IO DirectoryEntryList
 findDirectoryTable t k
- = do l <- atomically (do l <- readTVar t 
-                          writeTVar t l 
+ = do l <- atomically (do l <- readTVar t
+                          writeTVar t l
                           return l)
       let fl = filter (keyEquals k) l
       return fl
@@ -132,16 +132,16 @@ directoryFinder state done
  = do cc <- readDirectoryCommandCount cnt
       l <- findDirectoryTable t 1
 {-
-      if l /= [] then 
+      if l /= [] then
          putStr "found"
-       else 
+       else
          putStr "not found"
       putStrLn (" " ++ (show cc))
 -}
 
       b <- atomically (readTVar done)
       if b then return ()
-	   else directoryFinder state done
+           else directoryFinder state done
    where
      t = table state
      cnt = count state

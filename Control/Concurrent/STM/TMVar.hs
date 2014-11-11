@@ -9,7 +9,7 @@
 -- Module      :  Control.Concurrent.STM.TMVar
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -21,20 +21,20 @@
 
 module Control.Concurrent.STM.TMVar (
 #ifdef __GLASGOW_HASKELL__
-	-- * TMVars
-	TMVar,
-	newTMVar,
-	newEmptyTMVar,
-	newTMVarIO,
-	newEmptyTMVarIO,
-	takeTMVar,
-	putTMVar,
-	readTMVar,	
-	tryReadTMVar,
-	swapTMVar,
-	tryTakeTMVar,
-	tryPutTMVar,
-	isEmptyTMVar
+        -- * TMVars
+        TMVar,
+        newTMVar,
+        newEmptyTMVar,
+        newTMVarIO,
+        newEmptyTMVarIO,
+        takeTMVar,
+        putTMVar,
+        readTMVar,
+        tryReadTMVar,
+        swapTMVar,
+        tryTakeTMVar,
+        tryPutTMVar,
+        isEmptyTMVar
 #endif
   ) where
 
@@ -81,7 +81,7 @@ newEmptyTMVarIO = do
   return (TMVar t)
 
 -- |Return the contents of the 'TMVar'.  If the 'TMVar' is currently
--- empty, the transaction will 'retry'.  After a 'takeTMVar', 
+-- empty, the transaction will 'retry'.  After a 'takeTMVar',
 -- the 'TMVar' is left empty.
 takeTMVar :: TMVar a -> STM a
 takeTMVar (TMVar t) = do

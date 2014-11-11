@@ -9,7 +9,7 @@
 -- Module      :  Control.Concurrent.STM
 -- Copyright   :  (c) The University of Glasgow 2004
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -25,15 +25,15 @@
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM (
-	module Control.Monad.STM,
-	module Control.Concurrent.STM.TVar,
+        module Control.Monad.STM,
+        module Control.Concurrent.STM.TVar,
 #ifdef __GLASGOW_HASKELL__
-	module Control.Concurrent.STM.TMVar,
+        module Control.Concurrent.STM.TMVar,
         module Control.Concurrent.STM.TChan,
         module Control.Concurrent.STM.TQueue,
         module Control.Concurrent.STM.TBQueue,
 #endif
-	module Control.Concurrent.STM.TArray
+        module Control.Concurrent.STM.TArray
   ) where
 
 import Control.Monad.STM
