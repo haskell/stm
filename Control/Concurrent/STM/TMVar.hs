@@ -34,12 +34,15 @@ module Control.Concurrent.STM.TMVar (
         swapTMVar,
         tryTakeTMVar,
         tryPutTMVar,
-        isEmptyTMVar
+        isEmptyTMVar,
+        mkWeakTMVar
 #endif
   ) where
 
 #ifdef __GLASGOW_HASKELL__
+import GHC.Base
 import GHC.Conc
+import GHC.Weak
 
 import Data.Typeable (Typeable)
 
@@ -150,4 +153,10 @@ isEmptyTMVar (TMVar t) = do
   case m of
     Nothing -> return True
     Just _  -> return False
+
+-- | Make a 'Weak' pointer to a 'TMVar', using the second argument as
+-- a finalizer to run when the 'TMVar' is garbage-collected.
+mkWeakTMVar :: TMVar a -> IO () -> IO (Weak (TMVar a))
+mkWeakTMVar tmv@(TMVar (TVar t#)) f = IO $ \s ->
+    case mkWeak# t# tmv f s of (# s1, w #) -> (# s1, Weak w #)
 #endif
