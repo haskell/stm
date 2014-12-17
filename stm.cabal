@@ -1,5 +1,6 @@
 name:           stm
-version:        2.4.3.1
+version:        2.4.4
+-- don't forget to update changelog.md file!
 license:        BSD3
 license-file:   LICENSE
 maintainer:     libraries@haskell.org
@@ -29,6 +30,8 @@ library
         UnboxedTuples
     if impl(ghc >= 7.2)
         other-extensions: Trustworthy
+    if impl(ghc >= 7.9)
+        other-extensions: Safe
 
     build-depends:
         base  >= 4.2 && < 4.9,

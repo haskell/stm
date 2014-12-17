@@ -1,8 +1,14 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.4.3.1  *TBA*
+## 2.4.4  *Dec 2014*
 
   * Add support for `base-4.8.0.0`
+
+  * Tighten Safe Haskell bounds
+
+  * Add `mkWeakTMVar` to `Control.Concurrent.STM.TMVar`
+
+  * Add `@since`-annotations
 
 ## 2.4.3  *Mar 2014*
 
