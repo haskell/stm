@@ -19,7 +19,9 @@ module Control.Sequential.STM (
 #if __GLASGOW_HASKELL__ < 705
 import Prelude hiding (catch)
 #endif
+#if __GLASGOW_HASKELL__ < 709
 import Control.Applicative (Applicative(pure, (<*>)))
+#endif
 import Control.Exception
 import Data.IORef
 
