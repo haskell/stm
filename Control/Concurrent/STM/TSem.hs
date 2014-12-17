@@ -10,6 +10,7 @@
 --
 -- 'TSem': transactional semaphores.
 --
+-- @since 2.4.2
 -----------------------------------------------------------------------------
 
 {-# LANGUAGE DeriveDataTypeable #-}
@@ -34,6 +35,7 @@ import Data.Typeable
 -- resource.  However, like other STM abstractions, 'TSem' is
 -- composable.
 --
+-- @since 2.4.2
 newtype TSem = TSem (TVar Int)
   deriving (Eq, Typeable)
 

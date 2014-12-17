@@ -156,6 +156,8 @@ isEmptyTMVar (TMVar t) = do
 
 -- | Make a 'Weak' pointer to a 'TMVar', using the second argument as
 -- a finalizer to run when the 'TMVar' is garbage-collected.
+--
+-- @since 2.4.4
 mkWeakTMVar :: TMVar a -> IO () -> IO (Weak (TMVar a))
 mkWeakTMVar tmv@(TMVar (TVar t#)) f = IO $ \s ->
     case mkWeak# t# tmv f s of (# s1, w #) -> (# s1, Weak w #)

@@ -24,6 +24,7 @@
 -- queue representation that uses two lists to obtain amortised /O(1)/
 -- enqueue and dequeue operations.
 --
+-- @since 2.4
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TBQueue (
@@ -47,6 +48,8 @@ import GHC.Conc
 #define _UPK_(x) {-# UNPACK #-} !(x)
 
 -- | 'TBQueue' is an abstract type representing a bounded FIFO channel.
+--
+-- @since 2.4
 data TBQueue a
    = TBQueue _UPK_(TVar Int)  -- CR: read capacity
              _UPK_(TVar [a])  -- R:  elements waiting to be read
@@ -180,6 +183,8 @@ isEmptyTBQueue (TBQueue _rsize read _wsize write) = do
                _  -> return False
 
 -- |Returns 'True' if the supplied 'TBQueue' is full.
+--
+-- @since 2.4.3
 isFullTBQueue :: TBQueue a -> STM Bool
 isFullTBQueue (TBQueue rsize _read wsize _write) = do
   w <- readTVar wsize

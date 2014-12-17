@@ -95,6 +95,8 @@ newTChanIO = do
 -- it is only written to and never read, items will pile up in memory.  By
 -- using 'newBroadcastTChan' to create the broadcast channel, items can be
 -- garbage collected after clients have seen them.
+--
+-- @since 2.4
 newBroadcastTChan :: STM (TChan a)
 newBroadcastTChan = do
     write_hole <- newTVar TNil
@@ -103,6 +105,8 @@ newBroadcastTChan = do
     return (TChan read write)
 
 -- | @IO@ version of 'newBroadcastTChan'.
+--
+-- @since 2.4
 newBroadcastTChanIO :: IO (TChan a)
 newBroadcastTChanIO = do
     write_hole <- newTVarIO TNil
@@ -189,6 +193,8 @@ isEmptyTChan (TChan read _write) = do
 
 -- |Clone a 'TChan': similar to dupTChan, but the cloned channel starts with the
 -- same content available as the original channel.
+--
+-- @since 2.4
 cloneTChan :: TChan a -> STM (TChan a)
 cloneTChan (TChan read write) = do
   readpos <- readTVar read

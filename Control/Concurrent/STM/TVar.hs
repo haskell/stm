@@ -73,6 +73,8 @@ swapTVar var new = do
 
 -- | Make a 'Weak' pointer to a 'TVar', using the second argument as
 -- a finalizer to run when 'TVar' is garbage-collected
+--
+-- @since 2.4.3
 mkWeakTVar :: TVar a -> IO () -> IO (Weak (TVar a))
 mkWeakTVar t@(TVar t#) f = IO $ \s ->
     case mkWeak# t# t f s of (# s1, w #) -> (# s1, Weak w #)

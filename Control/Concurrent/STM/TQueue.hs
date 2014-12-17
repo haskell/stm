@@ -28,6 +28,7 @@
 -- queue representation that uses two lists to obtain amortised /O(1)/
 -- enqueue and dequeue operations.
 --
+-- @since 2.4
 -----------------------------------------------------------------------------
 
 module Control.Concurrent.STM.TQueue (
@@ -49,6 +50,8 @@ import GHC.Conc
 import Data.Typeable (Typeable)
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
+--
+-- @since 2.4
 data TQueue a = TQueue {-# UNPACK #-} !(TVar [a])
                        {-# UNPACK #-} !(TVar [a])
   deriving Typeable
