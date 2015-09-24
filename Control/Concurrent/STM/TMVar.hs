@@ -159,9 +159,6 @@ isEmptyTMVar (TMVar t) = do
 --
 -- @since 2.4.4
 mkWeakTMVar :: TMVar a -> IO () -> IO (Weak (TMVar a))
-mkWeakTMVar tmv@(TMVar (TVar t#)) f = IO $ \s ->
+mkWeakTMVar tmv@(TMVar (TVar t#)) (IO finalizer) = IO $ \s ->
     case mkWeak# t# tmv finalizer s of (# s1, w #) -> (# s1, Weak w #)
-  where
-    finalizer :: State# RealWorld -> State# RealWorld
-    finalizer s' = case unIO f s' of (# s'', () #) -> s''
 #endif
