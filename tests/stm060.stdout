@@ -24,7 +24,7 @@ Caught: Exn raised in invariant
 
 Adding a trivially false invariant (no TVar access)
 Caught: Transactional invariant violation
-CallStack:
+CallStack (from ImplicitParams):
   error, called at libraries/base/GHC/Conc/Sync.hs:767:61 in base:GHC.Conc.Sync
 
 Adding a trivially false invariant (with TVar access)
