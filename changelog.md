@@ -1,5 +1,11 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.4.4.1  *Dec 2015*
+
+  * Add support for `base-4.9.0.0`
+
+  * Drop support for GHC 6.12 / `base-4.2`
+
 ## 2.4.4  *Dec 2014*
 
   * Add support for `base-4.8.0.0`
