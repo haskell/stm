@@ -1,3 +1,5 @@
+setTestOpts(reqlib('stm'))
+
 test('stm046', only_compiler_types(['ghc']), compile_and_run, [''])
 
 # Omit GHCi for these two, since they appear to deadlock (23/11/2004 --SDM)
