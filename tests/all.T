@@ -1,14 +1,6 @@
 test('stm046', [], compile_and_run, [''])
-
-# Omit GHCi for these two, since they appear to deadlock (23/11/2004 --SDM)
-test('stm047',
-     [omit_ways(['ghci']),
-      when(compiler_lt('ghc', '6.9'), omit_ways(['ghci', 'threaded2']))],
-     compile_and_run, [''])
-test('stm048',
-     [omit_ways(['ghci']),
-      when(compiler_lt('ghc', '6.9'), omit_ways(['ghci', 'threaded2']))],
-     compile_and_run, [''])
+test('stm047', [], compile_and_run, [''])
+test('stm048', [], compile_and_run, [''])
 
 # The above tests don't require 'stm', but the ones below do.
 setTestOpts(reqlib('stm'))
@@ -16,11 +8,7 @@ setTestOpts(reqlib('stm'))
 test('stm049', [reqlib('random')], compile_and_run, ['-package stm'])
 test('stm050', [extra_run_opts('10000')], compile_and_run, ['-package stm'])
 
-# Was failing prof ways due to #1547, but now apparently succeeds:
-test('stm052', [ reqlib('random'),
-                 when(compiler_lt('ghc', '6.9'),
-                      expect_broken_for(1547,['profc','profasm'])) ],
-     compile_and_run, ['-package stm'])
+test('stm052', [reqlib('random')], compile_and_run, ['-package stm'])
 
 test('stm053', [ reqlib('random'),
                  only_ways(['threaded1','threaded2']),
