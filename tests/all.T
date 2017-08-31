@@ -28,5 +28,5 @@ test('T3049', normal, compile_and_run, ['-package stm'])
 test('T4057', normal, compile_and_run, ['-package stm'])
 test('stm064', normal, compile_and_run, ['-package stm'])
 test('stm065', normal, compile_and_run, ['-package stm'])
-
 test('cloneTChan001', normal, compile_and_run, ['-package stm'])
+test('T14171', exit_code(1), compile_and_run, ['-package stm'])
