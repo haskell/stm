@@ -1,5 +1,11 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## TBD
+
+  * Add `flushTQueue` to `Control.Concurrent.STM.TQueue`
+
+  * Add `flushTBQueue` to `Control.Concurrent.STM.TBQueue`
+
 ## 2.4.4.1  *Dec 2015*
 
   * Add support for `base-4.9.0.0`
