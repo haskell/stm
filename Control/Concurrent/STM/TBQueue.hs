@@ -101,12 +101,12 @@ writeTBQueue :: TBQueue a -> a -> STM ()
 writeTBQueue (TBQueue rsize _read wsize write) a = do
   w <- readTVar wsize
   if (w /= 0)
-     then do writeTVar wsize (w - 1)
+     then do writeTVar wsize $! w - 1
      else do
           r <- readTVar rsize
           if (r /= 0)
              then do writeTVar rsize 0
-                     writeTVar wsize (r - 1)
+                     writeTVar wsize $! r - 1
              else retry
   listend <- readTVar write
   writeTVar write (a:listend)
@@ -116,7 +116,7 @@ readTBQueue :: TBQueue a -> STM a
 readTBQueue (TBQueue rsize read _wsize write) = do
   xs <- readTVar read
   r <- readTVar rsize
-  writeTVar rsize (r + 1)
+  writeTVar rsize $! r + 1
   case xs of
     (x:xs') -> do
       writeTVar read xs'
@@ -162,11 +162,11 @@ unGetTBQueue :: TBQueue a -> a -> STM ()
 unGetTBQueue (TBQueue rsize read wsize _write) a = do
   r <- readTVar rsize
   if (r > 0)
-     then do writeTVar rsize (r - 1)
+     then do writeTVar rsize $! r - 1
      else do
           w <- readTVar wsize
           if (w > 0)
-             then writeTVar wsize (w - 1)
+             then writeTVar wsize $! w - 1
              else retry
   xs <- readTVar read
   writeTVar read (a:xs)
