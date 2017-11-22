@@ -87,16 +87,19 @@ readTQueue :: TQueue a -> STM a
 readTQueue (TQueue read write) = do
   xs <- readTVar read
   case xs of
-    (x:xs') -> do writeTVar read xs'
-                  return x
-    [] -> do ys <- readTVar write
-             case ys of
-               [] -> retry
-               _  -> case reverse ys of
-                       [] -> error "readTQueue"
-                       (z:zs) -> do writeTVar write []
-                                    writeTVar read zs
-                                    return z
+    (x:xs') -> do
+      writeTVar read xs'
+      return x
+    [] -> do
+      ys <- readTVar write
+      case ys of
+        [] -> retry
+        _  -> do
+          let (z:zs) = reverse ys -- NB. lazy: we want the transaction to be
+                                  -- short, otherwise it will conflict
+          writeTVar write []
+          writeTVar read zs
+          return z
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
