@@ -2,6 +2,8 @@ module Main where
 
 import Control.Concurrent.STM
 import Control.Concurrent.STM.TVar
+import Control.Applicative
+import Prelude -- for AMP compat
 
 data A = A String deriving (Eq, Show)
 
