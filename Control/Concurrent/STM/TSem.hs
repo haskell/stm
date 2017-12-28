@@ -36,7 +36,7 @@ import Data.Typeable
 -- composable.
 --
 -- @since 2.4.2
-newtype TSem = TSem (TVar Int)
+newtype TSem = TSem (TVar Integer)
   deriving (Eq, Typeable)
 
 -- | Construct new 'TSem' with an initial counter value.
@@ -50,7 +50,7 @@ newtype TSem = TSem (TVar Int)
 --
 -- @since 2.4.2
 newTSem :: Int -> STM TSem
-newTSem i = fmap TSem (newTVar i)
+newTSem i = fmap TSem (newTVar $! toInteger i)
 
 -- NOTE: we can't expose a good `TSem -> STM Int' operation as blocked
 -- 'waitTSem' aren't reliably reflected in a negative counter value.
@@ -72,11 +72,6 @@ waitTSem (TSem t) = do
   writeTVar t $! (i-1)
 
 
--- TODO: consider using an 'Integer' value for the internal counter
--- value which can never overflow; the computational overhead
--- should hopefully be neglectable in the context of the STM
--- transaction overhead.
---
 -- Alternatively, the implementation could block (via 'retry') when
 -- the next increment would overflow, i.e. testing for 'maxBound'
 
@@ -84,9 +79,6 @@ waitTSem (TSem t) = do
 --
 -- This operation adds\/releases a unit back to the semaphore
 -- (i.e. increments the internal counter).
---
--- __NOTE__: The implementation currently does not protect against
--- overflow of the internal 'Int' counter value.
 --
 -- @since 2.4.2
 signalTSem :: TSem -> STM ()

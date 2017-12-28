@@ -4,6 +4,8 @@
 
   * Fix space leak in `TBQueue` (gh-2, GHC#14494)
 
+  * Make `signalTSem` resilient against `Int` overflows (gh-4)
+
   * Make definition of `readTQueue` consistent with `readTBQueue` (gh-3, GHC#9539)
 
   * Add `flushTQueue` to `Control.Concurrent.STM.TQueue` (gh-1)
