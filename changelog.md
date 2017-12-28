@@ -2,9 +2,14 @@
 
 ## TBD
 
-  * Add `flushTQueue` to `Control.Concurrent.STM.TQueue`
+  * Fix space leak in `TBQueue` (gh-2, GHC#14494)
 
-  * Add `flushTBQueue` to `Control.Concurrent.STM.TBQueue`
+  * Make definition of `readTQueue` consistent with `readTBQueue` (gh-3, GHC#9539)
+
+  * Add `flushTQueue` to `Control.Concurrent.STM.TQueue` (gh-1)
+
+  * Add `flushTBQueue` to `Control.Concurrent.STM.TBQueue` (gh-1)
+
 
 ## 2.4.4.1  *Dec 2015*
 
