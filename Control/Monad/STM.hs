@@ -124,6 +124,7 @@ data STMret a = STMret (State# RealWorld) a
 liftSTM :: STM a -> State# RealWorld -> STMret a
 liftSTM (STM m) = \s -> case m s of (# s', r #) -> STMret s' r
 
+-- | @since 2.3
 instance MonadFix STM where
   mfix k = STM $ \s ->
     let ans        = liftSTM (k r) s

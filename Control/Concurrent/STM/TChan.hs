@@ -135,6 +135,8 @@ readTChan (TChan read _write) = do
 
 -- | A version of 'readTChan' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
+--
+-- @since 2.3
 tryReadTChan :: TChan a -> STM (Maybe a)
 tryReadTChan (TChan read _write) = do
   listhead <- readTVar read
@@ -147,6 +149,8 @@ tryReadTChan (TChan read _write) = do
 
 -- | Get the next value from the @TChan@ without removing it,
 -- retrying if the channel is empty.
+--
+-- @since 2.3
 peekTChan :: TChan a -> STM a
 peekTChan (TChan read _write) = do
   listhead <- readTVar read
@@ -157,6 +161,8 @@ peekTChan (TChan read _write) = do
 
 -- | A version of 'peekTChan' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
+--
+-- @since 2.3
 tryPeekTChan :: TChan a -> STM (Maybe a)
 tryPeekTChan (TChan read _write) = do
   listhead <- readTVar read

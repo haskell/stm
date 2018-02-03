@@ -51,6 +51,7 @@ atomically (STM m) = do
         rollback <- readIORef r
         rollback
 
+-- | @since 2.2.0
 throwSTM :: Exception e => e -> STM a
 throwSTM = STM . const . throwIO
 
@@ -83,6 +84,7 @@ newTVarIO a = do
 readTVar :: TVar a -> STM a
 readTVar (TVar ref) = STM (const (readIORef ref))
 
+-- | @since 2.1.2
 readTVarIO :: TVar a -> IO a
 readTVarIO (TVar ref) = readIORef ref
 

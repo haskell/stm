@@ -46,6 +46,8 @@ import Control.Sequential.STM
 -- Like 'modifyIORef' but for 'TVar'.
 -- | Mutate the contents of a 'TVar'. /N.B./, this version is
 -- non-strict.
+--
+-- @since 2.3
 modifyTVar :: TVar a -> (a -> a) -> STM ()
 modifyTVar var f = do
     x <- readTVar var
@@ -54,6 +56,8 @@ modifyTVar var f = do
 
 
 -- | Strict version of 'modifyTVar'.
+--
+-- @since 2.3
 modifyTVar' :: TVar a -> (a -> a) -> STM ()
 modifyTVar' var f = do
     x <- readTVar var
@@ -63,6 +67,8 @@ modifyTVar' var f = do
 
 -- Like 'swapTMVar' but for 'TVar'.
 -- | Swap the contents of a 'TVar' for a new value.
+--
+-- @since 2.3
 swapTVar :: TVar a -> a -> STM a
 swapTVar var new = do
     old <- readTVar var

@@ -135,6 +135,8 @@ readTMVar (TMVar t) = do
 
 -- | A version of 'readTMVar' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
+--
+-- @since 2.3
 tryReadTMVar :: TMVar a -> STM (Maybe a)
 tryReadTMVar (TMVar t) = readTVar t
 
