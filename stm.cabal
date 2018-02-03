@@ -4,13 +4,22 @@ version:        2.4.5.0
 license:        BSD3
 license-file:   LICENSE
 maintainer:     libraries@haskell.org
+homepage:       https://wiki.haskell.org/Software_transactional_memory
 bug-reports:    https://github.com/haskell/stm/issues
 synopsis:       Software Transactional Memory
 category:       Concurrency
-description:    A modular composable concurrency abstraction.
 build-type:     Simple
 cabal-version:  >=1.10
 tested-with:    GHC==7.10.*, GHC==7.8.*, GHC==7.6.*, GHC==7.4.*, GHC==7.2.*, GHC==7.0.*
+description:
+    Software Transactional Memory, or STM, is an abstraction for
+    concurrent communication. The main benefits of STM are
+    /composability/ and /modularity/. That is, using STM you can write
+    concurrent abstractions that can be easily composed with any other
+    abstraction built using STM, without exposing the details of how
+    your abstraction ensures safety. This is typically not the case
+    with other forms of concurrent communication, such as locks or
+    'MVar's.
 
 extra-source-files:
     changelog.md
