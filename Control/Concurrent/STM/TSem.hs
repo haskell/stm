@@ -98,7 +98,7 @@ signalTSem (TSem t) = do
 --
 -- > signalTSem == signalTSemN 1
 --
--- @since TBD
+-- @since 2.4.5
 signalTSemN :: Word.Word -> TSem -> STM ()
 signalTSemN 0 _ = return ()
 signalTSemN 1 s = signalTSem s

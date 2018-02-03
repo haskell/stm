@@ -1,6 +1,6 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## TBD
+## 2.4.5.0 *Feb 2018*
 
   * Fix space leak in `TBQueue` (gh-2, GHC#14494)
 
@@ -12,7 +12,7 @@
 
   * Add `flushTBQueue` to `Control.Concurrent.STM.TBQueue` (gh-1)
 
-  * Add `signalTSemN` operations (gh-5)
+  * Add `signalTSemN` operation (gh-5)
 
 
 ## 2.4.4.1  *Dec 2015*

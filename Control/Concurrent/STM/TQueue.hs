@@ -110,7 +110,7 @@ tryReadTQueue c = fmap Just (readTQueue c) `orElse` return Nothing
 -- | Efficiently read the entire contents of a 'TQueue' into a list. This
 -- function never retries.
 --
--- @since TBD
+-- @since 2.4.5
 flushTQueue :: TQueue a -> STM [a]
 flushTQueue (TQueue read write) = do
   xs <- readTVar read
