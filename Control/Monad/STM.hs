@@ -78,6 +78,11 @@ instance Alternative STM where
   (<|>) = orElse
 #endif
 
+-- | Check that the boolean condition is true and, if not, 'retry'.
+--
+-- In other words, @check b = unless b retry@.
+--
+-- @since 2.1.1
 check :: Bool -> STM ()
 check b = if b then return () else retry
 #endif
