@@ -12,7 +12,7 @@
 
   * Add `flushTBQueue` to `Control.Concurrent.STM.TBQueue` (gh-1)
 
-  * Add `signalTSemN` & `waitTSemN` operations (gh-5)
+  * Add `signalTSemN` operations (gh-5)
 
 
 ## 2.4.4.1  *Dec 2015*

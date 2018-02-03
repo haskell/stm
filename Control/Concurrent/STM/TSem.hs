@@ -19,7 +19,6 @@ module Control.Concurrent.STM.TSem
   , newTSem
 
   , waitTSem
-  , waitTSemN
 
   , signalTSem
   , signalTSemN
@@ -76,29 +75,6 @@ waitTSem (TSem t) = do
   when (i <= 0) retry
   writeTVar t $! (i-1)
 
-
--- | Multi-wait on 'TSem'.
---
--- Acquire multiple units at once from semaphore; blocks (via 'retry')
--- when the number of available units is less than the requested
--- amount.
---
--- > waitTSem == waitTSemN 1
---
--- __NOTE__: This operation is subtly different from repeatedly
--- invoking 'waitTSem'. Note that 'waitTSem 0' can block.
---
--- @since TBD
-waitTSemN :: Word.Word -> TSem -> STM ()
-waitTSemN 0 (TSem t) = do
-  i <- readTVar t
-  when (i < 0) retry
-waitTSemN 1 s = waitTSem s
-waitTSemN n (TSem t) = do
-  i <- readTVar t
-  let n' = toInteger n
-  when (i < n') retry
-  writeTVar t $! (i-n')
 
 -- Alternatively, the implementation could block (via 'retry') when
 -- the next increment would overflow, i.e. testing for 'maxBound'
