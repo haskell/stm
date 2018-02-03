@@ -14,13 +14,20 @@
 -----------------------------------------------------------------------------
 
 {-# LANGUAGE DeriveDataTypeable #-}
-module Control.Concurrent.STM.TSem (
-      TSem, newTSem, waitTSem, signalTSem
+module Control.Concurrent.STM.TSem
+  ( TSem
+  , newTSem
+
+  , waitTSem
+
+  , signalTSem
+  , signalTSemN
   ) where
 
 import Control.Concurrent.STM
 import Control.Monad
 import Data.Typeable
+import Data.Word as Word
 
 -- | 'TSem' is a transactional semaphore.  It holds a certain number
 -- of units, and units may be acquired or released by 'waitTSem' and
@@ -55,9 +62,6 @@ newTSem i = fmap TSem (newTVar $! toInteger i)
 -- NOTE: we can't expose a good `TSem -> STM Int' operation as blocked
 -- 'waitTSem' aren't reliably reflected in a negative counter value.
 
--- TODO: Consider adding '{wait,signal}TSemN :: Word -> TSem -> STM ()'
--- variants; NB: 'waitTSemN 0' would *not* be a no-op
-
 -- | Wait on 'TSem' (aka __P__ operation).
 --
 -- This operation acquires a unit from the semaphore (i.e. decreases
@@ -85,3 +89,19 @@ signalTSem :: TSem -> STM ()
 signalTSem (TSem t) = do
   i <- readTVar t
   writeTVar t $! i+1
+
+
+-- | Multi-signal a 'TSem'
+--
+-- This operation adds\/releases multiple units back to the semaphore
+-- (i.e. increments the internal counter).
+--
+-- > signalTSem == signalTSemN 1
+--
+-- @since TBD
+signalTSemN :: Word.Word -> TSem -> STM ()
+signalTSemN 0 _ = return ()
+signalTSemN 1 s = signalTSem s
+signalTSemN n (TSem t) = do
+  i <- readTVar t
+  writeTVar t $! i+(toInteger n)
