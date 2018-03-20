@@ -47,7 +47,7 @@ module Control.Concurrent.STM.TQueue (
   ) where
 
 import GHC.Conc
-
+import Control.Monad (unless)
 import Data.Typeable (Typeable)
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
@@ -115,8 +115,8 @@ flushTQueue :: TQueue a -> STM [a]
 flushTQueue (TQueue read write) = do
   xs <- readTVar read
   ys <- readTVar write
-  writeTVar read []
-  writeTVar write []
+  unless (null xs) $ writeTVar read []
+  unless (null ys) $ writeTVar write []
   return (xs ++ reverse ys)
 
 -- | Get the next value from the @TQueue@ without removing it,
