@@ -43,7 +43,7 @@ library
         other-extensions: Safe
 
     build-depends:
-        base  >= 4.3 && < 4.12,
+        base  >= 4.3 && < 4.13,
         array >= 0.3 && < 0.6
 
     exposed-modules:
