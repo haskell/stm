@@ -17,9 +17,7 @@
 --
 -- A 'TQueue' is like a 'TChan', with two important differences:
 --
---  * it has faster throughput than both 'TChan' and 'Chan' (although
---    the costs are amortised, so the cost of individual operations
---    can vary a lot).
+--  * it has faster throughput than both 'TChan' and 'Chan'.
 --
 --  * it does /not/ provide equivalents of the 'dupTChan' and
 --    'cloneTChan' operations.
@@ -94,6 +92,7 @@ writeTQueue (TQueue read write sched) a = do
     [] -> do
       front <- readTVar read
       let front' = rotate front (a:listend) []
+          {-# NOINLINE front' #-}
       writeTVar read front'
       writeTVar write []
       writeTVar sched front'
@@ -118,6 +117,7 @@ readTQueue (TQueue read write sched) = do
         [] -> do
            end <- readTVar write
            let front'' = rotate front' end []
+               {-# NOINLINE front'' #-}
            writeTVar read front''
            writeTVar write []
            writeTVar sched front''
