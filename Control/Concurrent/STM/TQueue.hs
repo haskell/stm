@@ -135,11 +135,15 @@ tryReadTQueue c = fmap Just (readTQueue c) `orElse` return Nothing
 flushTQueue :: TQueue a -> STM [a]
 flushTQueue (TQueue read write sched) = do
   xs <- readTVar read
-  ys <- readTVar write
-  unless (null xs) $ writeTVar read []
-  unless (null ys) $ writeTVar write []
-  writeTVar sched []
-  return (xs ++ reverse ys)
+  if null xs
+    then
+      return []
+    else do
+      ys <- readTVar write
+      writeTVar read []
+      unless (null ys) $ writeTVar write []
+      writeTVar sched []
+      return (xs ++ reverse ys)
 
 -- | Get the next value from the @TQueue@ without removing it,
 -- retrying if the channel is empty.
