@@ -28,6 +28,7 @@ module Control.Concurrent.STM.TVar (
         writeTVar,
         modifyTVar,
         modifyTVar',
+        stateTVar,
         swapTVar,
 #ifdef __GLASGOW_HASKELL__
         registerDelay,
@@ -63,6 +64,18 @@ modifyTVar' var f = do
     x <- readTVar var
     writeTVar var $! f x
 {-# INLINE modifyTVar' #-}
+
+
+-- |
+-- Like 'modifyTVar'' but the function is a simple state transition that can
+-- return a side value which is passed on as the result of the 'STM'.
+stateTVar :: TVar s -> (s -> (a, s)) -> STM a
+stateTVar var f = do
+   s <- readTVar var
+   let (a, s') = f s -- since we destructure this, we are strict in f
+   writeTVar var s'
+   return a
+{-# INLINE stateTVar #-}
 
 
 -- Like 'swapTMVar' but for 'TVar'.
