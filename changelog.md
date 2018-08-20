@@ -1,8 +1,10 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.5.0.0 *TBA*
+## 2.5.0.0 *Aug 2018*
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
+
+  * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`.
 
 ## 2.4.5.0 *Feb 2018*
 
