@@ -24,3 +24,5 @@ test('T2411', ignore_stdout, compile_and_run, ['-package stm'])
 test('stm064', normal, compile_and_run, ['-package stm'])
 test('stm065', normal, compile_and_run, ['-package stm'])
 test('cloneTChan001', normal, compile_and_run, ['-package stm'])
+
+test('T15136', extra_run_opts('20'), compile_and_run, ['-package stm'])
