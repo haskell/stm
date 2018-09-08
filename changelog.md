@@ -1,12 +1,21 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.5.0.0 *Aug 2018*
+## 2.5.0.0 *Sep 2018*
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
 
   * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`.
 
-## 2.4.5.0 *Feb 2018*
+----
+
+#### 2.4.5.1 *Sep 2018*
+
+  * Fix incorrect bookkeeping of write capacity in `flushTBQueue` (gh-9)
+
+  * Avoid redundant `writeTVar`s in `flushTQueue` to avoid unncessarily
+    invalidating other transactions (gh-6)
+
+### 2.4.5.0 *Feb 2018*
 
   * Fix space leak in `TBQueue` (gh-2, GHC#14494)
 
@@ -21,13 +30,13 @@
   * Add `signalTSemN` operation (gh-5)
 
 
-## 2.4.4.1  *Dec 2015*
+#### 2.4.4.1  *Dec 2015*
 
   * Add support for `base-4.9.0.0`
 
   * Drop support for GHC 6.12 / `base-4.2`
 
-## 2.4.4  *Dec 2014*
+### 2.4.4  *Dec 2014*
 
   * Add support for `base-4.8.0.0`
 
@@ -37,7 +46,7 @@
 
   * Add `@since`-annotations
 
-## 2.4.3  *Mar 2014*
+### 2.4.3  *Mar 2014*
 
   * Update behaviour of `newBroadcastTChanIO` to match
     `newBroadcastTChan` in causing an error on a read from the
@@ -52,7 +61,7 @@
 
   * Update to Cabal 1.10 format
 
-## 2.4.2  *Nov 2012*
+### 2.4.2  *Nov 2012*
 
   * Add `Control.Concurrent.STM.TSem` (transactional semaphore)
 
