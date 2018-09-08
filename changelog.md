@@ -1,5 +1,12 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.4.5.1 *Sep 2018*
+
+  * Fix incorrect bookkeeping of write capacity in `flushTBQueue` (gh-9)
+
+  * Avoid redundant `writeTVar`s in `flushTQueue` to avoid unncessarily
+    invalidating other transactions (gh-6)
+
 ## 2.4.5.0 *Feb 2018*
 
   * Fix space leak in `TBQueue` (gh-2, GHC#14494)
