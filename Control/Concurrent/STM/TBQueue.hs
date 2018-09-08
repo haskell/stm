@@ -193,7 +193,7 @@ unGetTBQueue (TBQueue rsize read wsize _write _size) a = do
 
 -- |Return the length of a 'TBQueue'.
 --
--- @Since FIXME
+-- @since 2.5.0.0
 lengthTBQueue :: TBQueue a -> STM Int
 lengthTBQueue (TBQueue rsize _read wsize _write size) = do
   r <- readTVar rsize
