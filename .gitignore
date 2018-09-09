@@ -18,3 +18,7 @@
 /GNUmakefile
 /dist-install/
 /ghc.mk
+
+/testsuite/dist-newstyle/
+/dist-newstyle/
+.ghc.environment.*
