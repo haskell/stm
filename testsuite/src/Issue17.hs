@@ -14,12 +14,12 @@ import           Test.HUnit.Base        (assertBool, assertEqual)
 
 main :: IO ()
 main = do
-  -- New queue capacity is set to a negative numer
-  queueIO <- newTBQueueIO (-1 :: Int)
+  -- New queue capacity is set to 0
+  queueIO <- newTBQueueIO 0
   assertNoCapacityTBQueue queueIO
 
-  -- Same as above, except created within STM and different negative number
-  queueSTM <- atomically $ newTBQueue (minBound :: Int)
+  -- Same as above, except created within STM
+  queueSTM <- atomically $ newTBQueue 0
   assertNoCapacityTBQueue queueSTM
 
 assertNoCapacityTBQueue :: TBQueue Int -> IO ()

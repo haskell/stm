@@ -45,6 +45,7 @@ module Control.Concurrent.STM.TBQueue (
   ) where
 
 import Data.Typeable
+import Numeric.Natural
 import GHC.Conc
 
 #define _UPK_(x) {-# UNPACK #-} !(x)
@@ -53,11 +54,11 @@ import GHC.Conc
 --
 -- @since 2.4
 data TBQueue a
-   = TBQueue _UPK_(TVar Int)  -- CR:  read capacity
-             _UPK_(TVar [a])  -- R:   elements waiting to be read
-             _UPK_(TVar Int)  -- CW:  write capacity
-             _UPK_(TVar [a])  -- W:   elements written (head is most recent)
-             _UPK_(Int)       -- CAP: initial capacity
+   = TBQueue _UPK_(TVar Natural) -- CR:  read capacity
+             _UPK_(TVar [a])     -- R:   elements waiting to be read
+             _UPK_(TVar Natural) -- CW:  write capacity
+             _UPK_(TVar [a])     -- W:   elements written (head is most recent)
+             _UPK_(Natural)      -- CAP: initial capacity
   deriving Typeable
 
 instance Eq (TBQueue a) where
@@ -77,8 +78,8 @@ instance Eq (TBQueue a) where
 --                 then CW := CR - 1; CR := 0
 --                 else **FULL**
 
--- |Build and returns a new instance of 'TBQueue'
-newTBQueue :: Int   -- ^ maximum number of elements the queue can hold
+-- | Builds and returns a new instance of 'TBQueue'.
+newTBQueue :: Natural   -- ^ maximum number of elements the queue can hold
            -> STM (TBQueue a)
 newTBQueue size = do
   read  <- newTVar []
@@ -91,7 +92,7 @@ newTBQueue size = do
 -- 'TBQueue's using 'System.IO.Unsafe.unsafePerformIO', because using
 -- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
 -- possible.
-newTBQueueIO :: Int -> IO (TBQueue a)
+newTBQueueIO :: Natural -> IO (TBQueue a)
 newTBQueueIO size = do
   read  <- newTVarIO []
   write <- newTVarIO []
@@ -103,11 +104,11 @@ newTBQueueIO size = do
 writeTBQueue :: TBQueue a -> a -> STM ()
 writeTBQueue (TBQueue rsize _read wsize write _size) a = do
   w <- readTVar wsize
-  if (w /= 0)
+  if (w > 0)
      then do writeTVar wsize $! w - 1
      else do
           r <- readTVar rsize
-          if (r /= 0)
+          if (r > 0)
              then do writeTVar rsize 0
                      writeTVar wsize $! r - 1
              else retry
@@ -194,7 +195,7 @@ unGetTBQueue (TBQueue rsize read wsize _write _size) a = do
 -- |Return the length of a 'TBQueue'.
 --
 -- @since 2.5.0.0
-lengthTBQueue :: TBQueue a -> STM Int
+lengthTBQueue :: TBQueue a -> STM Natural
 lengthTBQueue (TBQueue rsize _read wsize _write size) = do
   r <- readTVar rsize
   w <- readTVar wsize
