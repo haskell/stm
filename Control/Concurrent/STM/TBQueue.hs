@@ -77,10 +77,12 @@ instance Eq (TBQueue a) where
 --                 then CW := CR - 1; CR := 0
 --                 else **FULL**
 
--- |Build and returns a new instance of 'TBQueue'
+-- | Builds and returns a new instance of 'TBQueue'. It will ensure that
+-- maximum capacity is non-negative.
 newTBQueue :: Int   -- ^ maximum number of elements the queue can hold
            -> STM (TBQueue a)
-newTBQueue size = do
+newTBQueue rawSize = do
+  let size = max 0 rawSize
   read  <- newTVar []
   write <- newTVar []
   rsize <- newTVar 0
@@ -92,7 +94,8 @@ newTBQueue size = do
 -- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
 -- possible.
 newTBQueueIO :: Int -> IO (TBQueue a)
-newTBQueueIO size = do
+newTBQueueIO rawSize = do
+  let size = max 0 rawSize
   read  <- newTVarIO []
   write <- newTVarIO []
   rsize <- newTVarIO 0
@@ -103,11 +106,11 @@ newTBQueueIO size = do
 writeTBQueue :: TBQueue a -> a -> STM ()
 writeTBQueue (TBQueue rsize _read wsize write _size) a = do
   w <- readTVar wsize
-  if (w /= 0)
+  if (w > 0)
      then do writeTVar wsize $! w - 1
      else do
           r <- readTVar rsize
-          if (r /= 0)
+          if (r > 0)
              then do writeTVar rsize 0
                      writeTVar wsize $! r - 1
              else retry
