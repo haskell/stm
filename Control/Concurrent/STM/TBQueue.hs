@@ -54,11 +54,11 @@ import GHC.Conc
 --
 -- @since 2.4
 data TBQueue a
-   = TBQueue _UPK_(TVar Int)  -- CR:  read capacity
-             _UPK_(TVar [a])  -- R:   elements waiting to be read
-             _UPK_(TVar Int)  -- CW:  write capacity
-             _UPK_(TVar [a])  -- W:   elements written (head is most recent)
-             _UPK_(Int)       -- CAP: initial capacity
+   = TBQueue _UPK_(TVar Natural) -- CR:  read capacity
+             _UPK_(TVar [a])     -- R:   elements waiting to be read
+             _UPK_(TVar Natural) -- CW:  write capacity
+             _UPK_(TVar [a])     -- W:   elements written (head is most recent)
+             _UPK_(Natural)      -- CAP: initial capacity
   deriving Typeable
 
 instance Eq (TBQueue a) where
@@ -81,8 +81,7 @@ instance Eq (TBQueue a) where
 -- | Builds and returns a new instance of 'TBQueue'.
 newTBQueue :: Natural   -- ^ maximum number of elements the queue can hold
            -> STM (TBQueue a)
-newTBQueue natSize = do
-  let size = fromIntegral natSize
+newTBQueue size = do
   read  <- newTVar []
   write <- newTVar []
   rsize <- newTVar 0
@@ -94,8 +93,7 @@ newTBQueue natSize = do
 -- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
 -- possible.
 newTBQueueIO :: Natural -> IO (TBQueue a)
-newTBQueueIO natSize = do
-  let size = fromIntegral natSize
+newTBQueueIO size = do
   read  <- newTVarIO []
   write <- newTVarIO []
   rsize <- newTVarIO 0
@@ -201,7 +199,7 @@ lengthTBQueue :: TBQueue a -> STM Natural
 lengthTBQueue (TBQueue rsize _read wsize _write size) = do
   r <- readTVar rsize
   w <- readTVar wsize
-  return $! fromIntegral (size - r - w)
+  return $! (size - r - w)
 
 -- |Returns 'True' if the supplied 'TBQueue' is empty.
 isEmptyTBQueue :: TBQueue a -> STM Bool
