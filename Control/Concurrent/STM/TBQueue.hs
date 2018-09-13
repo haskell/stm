@@ -45,6 +45,7 @@ module Control.Concurrent.STM.TBQueue (
   ) where
 
 import Data.Typeable
+import Numeric.Natural
 import GHC.Conc
 
 #define _UPK_(x) {-# UNPACK #-} !(x)
@@ -77,12 +78,11 @@ instance Eq (TBQueue a) where
 --                 then CW := CR - 1; CR := 0
 --                 else **FULL**
 
--- | Builds and returns a new instance of 'TBQueue'. It will ensure that
--- maximum capacity is non-negative.
-newTBQueue :: Int   -- ^ maximum number of elements the queue can hold
+-- | Builds and returns a new instance of 'TBQueue'.
+newTBQueue :: Natural   -- ^ maximum number of elements the queue can hold
            -> STM (TBQueue a)
-newTBQueue rawSize = do
-  let size = max 0 rawSize
+newTBQueue natSize = do
+  let size = fromIntegral natSize
   read  <- newTVar []
   write <- newTVar []
   rsize <- newTVar 0
@@ -93,9 +93,9 @@ newTBQueue rawSize = do
 -- 'TBQueue's using 'System.IO.Unsafe.unsafePerformIO', because using
 -- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
 -- possible.
-newTBQueueIO :: Int -> IO (TBQueue a)
-newTBQueueIO rawSize = do
-  let size = max 0 rawSize
+newTBQueueIO :: Natural -> IO (TBQueue a)
+newTBQueueIO natSize = do
+  let size = fromIntegral natSize
   read  <- newTVarIO []
   write <- newTVarIO []
   rsize <- newTVarIO 0
@@ -197,11 +197,11 @@ unGetTBQueue (TBQueue rsize read wsize _write _size) a = do
 -- |Return the length of a 'TBQueue'.
 --
 -- @since 2.5.0.0
-lengthTBQueue :: TBQueue a -> STM Int
+lengthTBQueue :: TBQueue a -> STM Natural
 lengthTBQueue (TBQueue rsize _read wsize _write size) = do
   r <- readTVar rsize
   w <- readTVar wsize
-  return $! size - r - w
+  return $! fromIntegral (size - r - w)
 
 -- |Returns 'True' if the supplied 'TBQueue' is empty.
 isEmptyTBQueue :: TBQueue a -> STM Bool

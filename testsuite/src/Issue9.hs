@@ -15,7 +15,7 @@ main :: IO ()
 #if MIN_VERSION_stm(2,4,5)
 main = do
   -- New queue with capacity 5
-  queue <- newTBQueueIO (5 :: Int)
+  queue <- newTBQueueIO 5
 
   -- Fill it up with [1..5]
   for_ [1..5] $ \i ->
