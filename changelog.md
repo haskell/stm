@@ -8,6 +8,8 @@
 
   * Switched `newTBQueue` and `newTBQueueIO` to accept `Natural` as size (gh-17)
 
+  * Switched `signalTSemN` and `newTSem` to accept `Natural` and `Integer` respectively (gh-17)
+
 ----
 
 #### 2.4.5.1 *Sep 2018*

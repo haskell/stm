@@ -27,7 +27,7 @@ module Control.Concurrent.STM.TSem
 import Control.Concurrent.STM
 import Control.Monad
 import Data.Typeable
-import Data.Word as Word
+import Numeric.Natural
 
 -- | 'TSem' is a transactional semaphore.  It holds a certain number
 -- of units, and units may be acquired or released by 'waitTSem' and
@@ -56,8 +56,8 @@ newtype TSem = TSem (TVar Integer)
 -- operations to counter-balance.
 --
 -- @since 2.4.2
-newTSem :: Int -> STM TSem
-newTSem i = fmap TSem (newTVar $! toInteger i)
+newTSem :: Integer -> STM TSem
+newTSem i = fmap TSem (newTVar $! i)
 
 -- NOTE: we can't expose a good `TSem -> STM Int' operation as blocked
 -- 'waitTSem' aren't reliably reflected in a negative counter value.
@@ -99,7 +99,7 @@ signalTSem (TSem t) = do
 -- > signalTSem == signalTSemN 1
 --
 -- @since 2.4.5
-signalTSemN :: Word.Word -> TSem -> STM ()
+signalTSemN :: Natural -> TSem -> STM ()
 signalTSemN 0 _ = return ()
 signalTSemN 1 s = signalTSem s
 signalTSemN n (TSem t) = do
