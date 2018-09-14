@@ -1,9 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
-
-#if __GLASGOW_HASKELL__ >= 701
-{-# LANGUAGE Trustworthy #-}
-#endif
+{-# LANGUAGE CPP, Trustworthy #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -47,14 +43,12 @@ module Control.Concurrent.STM.TChan (
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc
 
-import Data.Typeable (Typeable)
-
 #define _UPK_(x) {-# UNPACK #-} !(x)
 
 -- | 'TChan' is an abstract type representing an unbounded FIFO channel.
 data TChan a = TChan _UPK_(TVar (TVarList a))
                      _UPK_(TVar (TVarList a))
-  deriving (Eq, Typeable)
+  deriving (Eq)
 
 type TVarList a = TVar (TList a)
 data TList a = TNil | TCons a _UPK_(TVarList a)

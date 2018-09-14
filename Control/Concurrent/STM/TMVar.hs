@@ -1,8 +1,4 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, MagicHash, UnboxedTuples #-}
-
-#if __GLASGOW_HASKELL__ >= 701
-{-# LANGUAGE Trustworthy #-}
-#endif
+{-# LANGUAGE CPP, MagicHash, Trustworthy, UnboxedTuples #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -44,9 +40,7 @@ import GHC.Base
 import GHC.Conc
 import GHC.Weak
 
-import Data.Typeable (Typeable)
-
-newtype TMVar a = TMVar (TVar (Maybe a)) deriving (Eq, Typeable)
+newtype TMVar a = TMVar (TVar (Maybe a)) deriving (Eq)
 {- ^
 A 'TMVar' is a synchronising variable, used
 for communication between concurrent threads.  It can be thought of

@@ -6,6 +6,13 @@
 
   * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`.
 
+  * Switched `newTBQueue` and `newTBQueueIO` to accept `Natural` as
+    size. [#17](https://github.com/haskell/stm/pull/17)
+
+  * Switched `signalTSemN` and `newTSem` to accept `Natural` and `Integer` respectfully.
+
+  * Dropped support for `base < 4.8`, due to above change.
+
 ----
 
 #### 2.4.5.1 *Sep 2018*
