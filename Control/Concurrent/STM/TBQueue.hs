@@ -1,9 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
-
-#if __GLASGOW_HASKELL__ >= 701
-{-# LANGUAGE Trustworthy #-}
-#endif
+{-# LANGUAGE CPP, Trustworthy #-}
 
 -----------------------------------------------------------------------------
 -- |
@@ -59,7 +55,6 @@ data TBQueue a
              _UPK_(TVar Natural) -- CW:  write capacity
              _UPK_(TVar [a])     -- W:   elements written (head is most recent)
              _UPK_(Natural)      -- CAP: initial capacity
-  deriving Typeable
 
 instance Eq (TBQueue a) where
   TBQueue a _ _ _ _ == TBQueue b _ _ _ _ = a == b
@@ -199,7 +194,7 @@ lengthTBQueue :: TBQueue a -> STM Natural
 lengthTBQueue (TBQueue rsize _read wsize _write size) = do
   r <- readTVar rsize
   w <- readTVar wsize
-  return $! (size - r - w)
+  return $! size - r - w
 
 -- |Returns 'True' if the supplied 'TBQueue' is empty.
 isEmptyTBQueue :: TBQueue a -> STM Bool

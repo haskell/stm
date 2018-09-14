@@ -1,15 +1,11 @@
-{-# LANGUAGE CPP, DeriveDataTypeable, FlexibleInstances, MultiParamTypeClasses #-}
-
-#if __GLASGOW_HASKELL__ >= 701
-{-# LANGUAGE Trustworthy #-}
-#endif
+{-# LANGUAGE CPP, FlexibleInstances, Trustworthy, MultiParamTypeClasses #-}
 
 -----------------------------------------------------------------------------
 -- |
 -- Module      :  Control.Concurrent.STM.TArray
 -- Copyright   :  (c) The University of Glasgow 2005
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -26,7 +22,6 @@ import Data.Array (Array, bounds)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
                         IArray(numElements))
 import Data.Ix (rangeSize)
-import Data.Typeable (Typeable)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
 #ifdef __GLASGOW_HASKELL__
 import GHC.Conc (STM)
@@ -41,7 +36,7 @@ import Control.Sequential.STM (STM)
 -- but it may be replaced by a more efficient implementation in the future
 -- (the interface will remain the same, however).
 --
-newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
+newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)

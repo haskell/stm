@@ -32,7 +32,6 @@ library
     default-language: Haskell2010
     other-extensions:
         CPP
-        DeriveDataTypeable
         FlexibleInstances
         MagicHash
         MultiParamTypeClasses
