@@ -1,8 +1,8 @@
-{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
-{-# LANGUAGE CPP, DeriveDataTypeable #-}
+{-# LANGUAGE CPP                #-}
+{-# LANGUAGE DeriveDataTypeable #-}
 
 #if __GLASGOW_HASKELL__ >= 701
-{-# LANGUAGE Trustworthy #-}
+{-# LANGUAGE Trustworthy        #-}
 #endif
 
 -----------------------------------------------------------------------------
@@ -44,21 +44,21 @@ module Control.Concurrent.STM.TBQueue (
         isFullTBQueue,
   ) where
 
-import Data.Typeable
-import Numeric.Natural
-import GHC.Conc
-
-#define _UPK_(x) {-# UNPACK #-} !(x)
+import           Data.Typeable   (Typeable)
+import           GHC.Conc        (STM, TVar, newTVar, newTVarIO, orElse,
+                                  readTVar, retry, writeTVar)
+import           Numeric.Natural (Natural)
+import           Prelude         hiding (read)
 
 -- | 'TBQueue' is an abstract type representing a bounded FIFO channel.
 --
 -- @since 2.4
 data TBQueue a
-   = TBQueue _UPK_(TVar Natural) -- CR:  read capacity
-             _UPK_(TVar [a])     -- R:   elements waiting to be read
-             _UPK_(TVar Natural) -- CW:  write capacity
-             _UPK_(TVar [a])     -- W:   elements written (head is most recent)
-             _UPK_(Natural)      -- CAP: initial capacity
+   = TBQueue {-# UNPACK #-} !(TVar Natural) -- CR:  read capacity
+             {-# UNPACK #-} !(TVar [a])     -- R:   elements waiting to be read
+             {-# UNPACK #-} !(TVar Natural) -- CW:  write capacity
+             {-# UNPACK #-} !(TVar [a])     -- W:   elements written (head is most recent)
+                            !(Natural)      -- CAP: initial capacity
   deriving Typeable
 
 instance Eq (TBQueue a) where
