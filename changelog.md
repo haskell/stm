@@ -4,12 +4,9 @@
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
 
-  * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`.
+  * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`
 
-  * Switched `newTBQueue` and `newTBQueueIO` to accept `Natural` as
-    size. [#17](https://github.com/haskell/stm/pull/17)
-
-  * Dropped support for `base < 4.8`, due to above change.
+  * Switched `newTBQueue` and `newTBQueueIO` to accept `Natural` as size (gh-17)
 
 ----
 
