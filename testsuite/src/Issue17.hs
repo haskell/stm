@@ -22,6 +22,18 @@ main = do
   queueSTM <- atomically $ newTBQueue 0
   assertNoCapacityTBQueue queueSTM
 
+#if !MIN_VERSION_stm(2,5,0)
+  -- NB: below are expected failures
+
+  -- New queue capacity is set to a negative numer
+  queueIO' <- newTBQueueIO (-1 :: Int)
+  assertNoCapacityTBQueue queueIO'
+
+  -- Same as above, except created within STM and different negative number
+  queueSTM' <- atomically $ newTBQueue (minBound :: Int)
+  assertNoCapacityTBQueue queueSTM'
+#endif
+
 assertNoCapacityTBQueue :: TBQueue Int -> IO ()
 assertNoCapacityTBQueue queue = do
   assertEmptyTBQueue queue
