@@ -12,7 +12,6 @@ module Issue17 (main) where
 import           Control.Concurrent.STM
 import           Test.HUnit.Base        (assertBool, assertEqual)
 
-#if MIN_VERSION_stm(2,5,0)
 main :: IO ()
 main = do
   -- New queue capacity is set to a negative numer
@@ -60,9 +59,3 @@ assertFullTBQueue :: TBQueue Int -> IO ()
 assertFullTBQueue queue = do
   atomically (isFullTBQueue queue) >>=
     assertBool "Expected full: isFullTBQueue shoule return True"
-
-#else
--- test-case above will fail for 2.4.5.1 and prior
-main :: IO ()
-main = return ()
-#endif
