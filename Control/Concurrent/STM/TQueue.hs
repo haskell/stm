@@ -134,7 +134,7 @@ peekTQueue (TQueue read write) = do
           let (z:zs) = reverse ys -- NB. lazy: we want the transaction to be
                                   -- short, otherwise it will conflict
           writeTVar write []
-          writeTVar read zs
+          writeTVar read (z:zs)
           return z
 
 -- | A version of 'peekTQueue' which does not retry. Instead it
