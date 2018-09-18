@@ -4,7 +4,9 @@
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
 
-  * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue`
+  * Add `lengthTBQueue` to `Control.Concurrent.STM.TBQueue` (gh-9)
+
+  * Add `stateTVar :: TVar s -> (s -> (a, s)) -> STM a` combinator (gh-14)
 
   * Switched `newTBQueue` and `newTBQueueIO` to accept `Natural` as size (gh-17)
 

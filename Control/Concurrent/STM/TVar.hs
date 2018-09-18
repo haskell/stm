@@ -66,9 +66,10 @@ modifyTVar' var f = do
 {-# INLINE modifyTVar' #-}
 
 
--- |
--- Like 'modifyTVar'' but the function is a simple state transition that can
+-- | Like 'modifyTVar'' but the function is a simple state transition that can
 -- return a side value which is passed on as the result of the 'STM'.
+--
+-- @since 2.5.0
 stateTVar :: TVar s -> (s -> (a, s)) -> STM a
 stateTVar var f = do
    s <- readTVar var
