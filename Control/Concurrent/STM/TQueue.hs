@@ -93,11 +93,11 @@ readTQueue (TQueue read write) = do
       return x
     [] -> do
       ys <- readTVar write
-      case ys of
-        [] -> retry
-        _  -> do
-          let (z:zs) = reverse ys -- NB. lazy: we want the transaction to be
-                                  -- short, otherwise it will conflict
+      case reverse ys of
+        -- NB. lazy: we want the transaction to be short,
+        -- otherwise it will conflict
+        []     -> retry
+        (z:zs) -> do
           writeTVar write []
           writeTVar read zs
           return z
