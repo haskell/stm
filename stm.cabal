@@ -60,6 +60,7 @@ library
         Control.Concurrent.STM.TBQueue
         Control.Concurrent.STM.TSem
         Control.Monad.STM
+        Control.Monad.STM.Class
     other-modules:
         Control.Sequential.STM
 
