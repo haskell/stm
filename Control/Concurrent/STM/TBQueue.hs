@@ -161,10 +161,20 @@ flushTBQueue (TBQueue rsize read wsize write size) = do
 -- | Get the next value from the @TBQueue@ without removing it,
 -- retrying if the channel is empty.
 peekTBQueue :: TBQueue a -> STM a
-peekTBQueue c = do
-  x <- readTBQueue c
-  unGetTBQueue c x
-  return x
+peekTBQueue (TBQueue _ read _ write _) = do
+  xs <- readTVar read
+  case xs of
+    (x:_) -> return x
+    [] -> do
+      ys <- readTVar write
+      case ys of
+        [] -> retry
+        _  -> do
+          let (z:zs) = reverse ys -- NB. lazy: we want the transaction to be
+                                  -- short, otherwise it will conflict
+          writeTVar write []
+          writeTVar read (z:zs)
+          return z
 
 -- | A version of 'peekTBQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
