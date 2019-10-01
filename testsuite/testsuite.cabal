@@ -47,5 +47,12 @@ test-suite stm
     , array ^>= 0.3.0.2 || ^>= 0.4.0.0 || ^>= 0.5.0.0
     , random ^>= 1.1
 
+  -- The __GLASGOW_HASKELL_PATCHLEVEL1__ macro wasn't available until GHC 7.10.1,
+  -- so we must use the .cabal file to detect if we're compiling with GHC 7.6.1
+  -- in particular. See the comments in Stm065 for more information about why we
+  -- must single out this version of GHC.
+  if impl(ghc==7.6.1)
+    cpp-options: "-DGHC_7_6_1"
+
   ghc-options: -Wall -fno-warn-unused-imports
   ghc-options: -threaded

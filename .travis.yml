@@ -155,8 +155,6 @@ install:
     echo "packages: ." >> cabal.project
     echo "packages: testsuite" >> cabal.project
   - |
-    echo "package testsuite" >> cabal.project
-    echo "  tests: true"     >> cabal.project
   - "for pkg in $($HCPKG list --simple-output); do echo $pkg | sed 's/-[^-]*$//' | (grep -vE -- '^(random|stm|testsuite)$' || true) | sed 's/^/constraints: /' | sed 's/$/ installed/' >> cabal.project.local; done"
   - cat cabal.project || true
   - cat cabal.project.local || true
@@ -185,8 +183,6 @@ script:
     echo "packages: ${PKGDIR_stm}" >> cabal.project
     echo "packages: ${PKGDIR_testsuite}" >> cabal.project
   - |
-    echo "package testsuite" >> cabal.project
-    echo "  tests: true"     >> cabal.project
   - "for pkg in $($HCPKG list --simple-output); do echo $pkg | sed 's/-[^-]*$//' | (grep -vE -- '^(random|stm|testsuite)$' || true) | sed 's/^/constraints: /' | sed 's/$/ installed/' >> cabal.project.local; done"
   - cat cabal.project || true
   - cat cabal.project.local || true
