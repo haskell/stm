@@ -13,7 +13,7 @@ import           Control.Concurrent.STM
 import           Control.Monad          (unless)
 
 main :: IO ()
-#if __GLASGOW_HASKELL__ >= 706
+#if __GLASGOW_HASKELL__ >= 706 && !defined(GHC_7_6_1)
 main = do
   x <- atomically $ do
          t <- newTVar (1 :: Integer)
