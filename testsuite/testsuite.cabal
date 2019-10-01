@@ -6,6 +6,7 @@ synopsis:            External testsuite for stm package
 category:            Testing
 license:             BSD-3-Clause
 maintainer:          hvr@gnu.org
+tested-with:         GHC==8.8.*, GHC==8.6.*, GHC==8.4.*, GHC==8.2.*, GHC==8.0.*, GHC==7.10.*, GHC==7.8.*, GHC==7.6.*, GHC==7.4.*, GHC==7.2.*, GHC==7.0.*
 description:
   This testsuite is intended to be compatible with different versions
   of `stm` (via use of @CPP@ if needed) in order to more easily
@@ -35,7 +36,7 @@ test-suite stm
 
   --
   build-depends:
-    , base                   >= 4.3 && < 4.13
+    , base                   >= 4.3 && < 4.14
     , test-framework        ^>= 0.8.2.0
     , test-framework-hunit  ^>= 0.3.0.2
     , HUnit                 ^>= 1.6.0.0
