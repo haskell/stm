@@ -3,7 +3,6 @@ module Main where
 import Control.Concurrent.STM
 import GHC.Conc
 import Control.Exception
-import Data.List
 
 main = do
   tv <- atomically $ newTVar "test"
