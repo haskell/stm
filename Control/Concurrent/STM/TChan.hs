@@ -86,7 +86,7 @@ newTChanIO = do
 --
 -- >serve :: TChan Message -> Client -> IO loop
 -- >serve broadcastChan client = do
--- >    myChan <- dupTChan broadcastChan
+-- >    myChan <- atomically $ dupTChan broadcastChan
 -- >    forever $ do
 -- >        message <- readTChan myChan
 -- >        send client message
