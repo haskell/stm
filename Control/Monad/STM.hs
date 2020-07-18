@@ -105,7 +105,8 @@ catchSTM (STM m) handler = STM $ catchSTM# m handler'
 -- | A variant of 'throw' that can only be used within the 'STM' monad.
 --
 -- Throwing an exception in @STM@ aborts the transaction and propagates the
--- exception.
+-- exception. (Note: Allocation effects, such as  'newTVar' are not roll backed
+-- when this happens. All other effects are discard. See <https://gitlab.haskell.org/ghc/ghc/-/issues/18453 ghc#18453.>)
 --
 -- Although 'throwSTM' has a type that is an instance of the type of 'throw', the
 -- two functions are subtly different:
