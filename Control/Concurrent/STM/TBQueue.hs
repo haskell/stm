@@ -44,6 +44,7 @@ module Control.Concurrent.STM.TBQueue (
         isFullTBQueue,
   ) where
 
+import           Control.Monad   (unless)
 import           Data.Typeable   (Typeable)
 import           GHC.Conc        (STM, TVar, newTVar, newTVarIO, orElse,
                                   readTVar, retry, writeTVar)
@@ -152,8 +153,8 @@ flushTBQueue (TBQueue rsize read wsize write size) = do
   if null xs && null ys
     then return []
     else do
-      writeTVar read []
-      writeTVar write []
+      unless (null xs) $ writeTVar read []
+      unless (null ys) $ writeTVar write []
       writeTVar rsize 0
       writeTVar wsize size
       return (xs ++ reverse ys)
