@@ -25,7 +25,7 @@ module Control.Concurrent.STM.TArray (
 import Data.Array (Array, bounds)
 import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
                         IArray(numElements))
-import Data.Ix (rangeSize)
+import Data.Ix (Ix (rangeSize))
 import Data.Typeable (Typeable)
 import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
 #ifdef __GLASGOW_HASKELL__
@@ -41,7 +41,18 @@ import Control.Sequential.STM (STM)
 -- but it may be replaced by a more efficient implementation in the future
 -- (the interface will remain the same, however).
 --
-newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
+newtype TArray i e = TArray (Array i (TVar e)) deriving (Typeable)
+
+-- There are no provisions for moving/copying TVars between TArrays.
+-- Therefore, two TArrays are equal if and only if they are both empty or are
+-- actually the same array in memory. We have no safe operations for checking
+-- that directly (though in practice we could use `unsafeCoerce#` with
+-- `sameMutableArray#`). So instead we take a quick look at the array sizes and
+-- then decide based on the first TVar of each.
+instance Ix i => Eq (TArray i e) where
+  TArray t1 == TArray t2
+    = numElements t1 == numElements t2
+    && (numElements t1 == 0 || unsafeAt t1 0 == unsafeAt t2 0)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
