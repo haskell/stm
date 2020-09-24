@@ -30,6 +30,7 @@ module Control.Concurrent.STM.TMVar (
         takeTMVar,
         putTMVar,
         readTMVar,
+        writeTMVar,
         tryReadTMVar,
         swapTMVar,
         tryTakeTMVar,
@@ -151,7 +152,7 @@ swapTMVar (TMVar t) new = do
 -- | Non-blocking write of a new value to a 'TMVar'
 -- Puts if empty. Replaces if populated.
 writeTMVar :: TMVar a -> a -> STM ()
-writeTMVar t new = tryTakeTMVar t *> putTMVar t new
+writeTMVar t new = tryTakeTMVar t >> putTMVar t new
 
 -- |Check whether a given 'TMVar' is empty.
 isEmptyTMVar :: TMVar a -> STM Bool
