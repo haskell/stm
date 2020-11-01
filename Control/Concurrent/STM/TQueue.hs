@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# OPTIONS_GHC -fno-warn-incomplete-uni-patterns #-}
 {-# LANGUAGE CPP, DeriveDataTypeable #-}
 
 #if __GLASGOW_HASKELL__ >= 701
