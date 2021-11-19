@@ -66,4 +66,4 @@ library
     other-modules:
         Control.Sequential.STM
 
-    ghc-options: -Wall
+    ghc-options: -Wall -fwarn-incomplete-uni-patterns -fwarn-incomplete-record-updates
