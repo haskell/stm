@@ -1,5 +1,11 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## Unreleased
+
+  * Added `Control.Monad.STM.Class` module
+
+    * Before release, update `@since FIXME` annotations
+
 ## 2.5.0.0 *Sep 2018*
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
