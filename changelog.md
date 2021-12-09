@@ -1,5 +1,10 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.0.1 *May 2020*
+
+  * Optimise implementation of `peekTQueue` and `peekTBQueue` to reduce
+    probability of transaction conflicts.
+
 ## 2.5.0.0 *Sep 2018*
 
   * Removed `alwaysSucceeds` and `always`, GHC's invariant checking primitives. (GHC #14324)
