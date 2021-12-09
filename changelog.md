@@ -1,5 +1,11 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.0.2 *Dec 2021*
+
+  * Fix non-exhaustive patterns warning (#49)
+
+  * Document particulars of effect-rollback of `Control.Monad.STM.throwSTM` (#32)
+
 ## 2.5.0.1 *May 2020*
 
   * Optimise implementation of `peekTQueue` and `peekTBQueue` to reduce
