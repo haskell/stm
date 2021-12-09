@@ -1,5 +1,10 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.1.2 *TBD*
+
+  * Teach `flushTBQueue` to only flush queue when necessary
+  * Introduce `Control.Concurrent.STM.TMVar.writeTMVar`
+
 ## 2.5.0.2 *Dec 2021*
 
   * Fix non-exhaustive patterns warning (#49)
