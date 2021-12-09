@@ -132,8 +132,11 @@ readTBQueue (TBQueue rsize read _wsize write _size) = do
       case ys of
         [] -> retry
         _  -> do
-          let (z:zs) = reverse ys -- NB. lazy: we want the transaction to be
-                                  -- short, otherwise it will conflict
+          -- NB. lazy: we want the transaction to be
+          -- short, otherwise it will conflict
+          let ~(z,zs) = case reverse ys of
+                          z':zs' -> (z',zs')
+                          _      -> error "readTBQueue: impossible"
           writeTVar write []
           writeTVar read zs
           return z
