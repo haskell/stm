@@ -68,6 +68,16 @@ import Control.Monad (ap)
 #endif
 #endif
 
+#if !MIN_VERSION_base(4,17,0)
+import Control.Monad (liftM2)
+#if !MIN_VERSION_base(4,11,0)
+import Data.Semigroup (Semigroup (..))
+#endif
+#if !MIN_VERSION_base(4,8,0)
+import Data.Monoid (Monoid (..))
+#endif
+#endif
+
 
 #ifdef __GLASGOW_HASKELL__
 #if ! (MIN_VERSION_base(4,3,0))
@@ -137,3 +147,14 @@ instance MonadFix STM where
     let ans        = liftSTM (k r) s
         STMret _ r = ans
     in case ans of STMret s' x -> (# s', x #)
+
+#if !MIN_VERSION_base(4,17,0)
+instance Semigroup a => Semigroup (STM a) where
+    (<>) = liftM2 (<>)
+
+instance Monoid a => Monoid (STM a) where
+    mempty = return mempty
+#if !MIN_VERSION_base(4,13,0)
+    mappend = liftM2 mappend
+#endif
+#endif

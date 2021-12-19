@@ -1,9 +1,10 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.5.1.2 *TBD*
+## 2.5.1.0 *TBD*
 
   * Teach `flushTBQueue` to only flush queue when necessary
   * Introduce `Control.Concurrent.STM.TMVar.writeTMVar`
+  * Add `Semigroup` and `Monoid` instances for `STM`
 
 ## 2.5.0.2 *Dec 2021*
 
