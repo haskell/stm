@@ -35,7 +35,7 @@
 
   * Fix incorrect bookkeeping of write capacity in `flushTBQueue` (gh-9)
 
-  * Avoid redundant `writeTVar`s in `flushTQueue` to avoid unncessarily
+  * Avoid redundant `writeTVar`s in `flushTQueue` to avoid unnecessarily
     invalidating other transactions (gh-6)
 
 ### 2.4.5.0 *Feb 2018*
