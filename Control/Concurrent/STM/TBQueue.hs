@@ -35,6 +35,7 @@ module Control.Concurrent.STM.TBQueue (
         newTBQueueIO,
         readTBQueue,
         tryReadTBQueue,
+        snapshotTBQueue,
         flushTBQueue,
         peekTBQueue,
         tryPeekTBQueue,
@@ -145,6 +146,14 @@ readTBQueue (TBQueue rsize read _wsize write _size) = do
 -- returns @Nothing@ if no value is available.
 tryReadTBQueue :: TBQueue a -> STM (Maybe a)
 tryReadTBQueue c = fmap Just (readTBQueue c) `orElse` return Nothing
+
+-- | Efficiently read the entire contents of a 'TBQueue' into a list without changing queue contents.
+-- This function never retries.
+snapshotTBQueue :: TBQueue a -> STM [a]
+snapshotTBQueue (TBQueue _ read _ write _) = do
+  xs <- readTVar read
+  ys <- readTVar write
+  return $ if null xs && null ys then [] else xs ++ reverse ys
 
 -- | Efficiently read the entire contents of a 'TBQueue' into a list. This
 -- function never retries.
