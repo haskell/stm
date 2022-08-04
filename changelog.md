@@ -1,6 +1,6 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.5.1.0 *TBD*
+## 2.5.1.0 *Aug 2022*
 
   * Teach `flushTBQueue` to only flush queue when necessary
   * Introduce `Control.Concurrent.STM.TMVar.writeTMVar`
