@@ -151,8 +151,10 @@ swapTMVar (TMVar t) new = do
 
 -- | Non-blocking write of a new value to a 'TMVar'
 -- Puts if empty. Replaces if populated.
+--
+-- @since 2.5.1
 writeTMVar :: TMVar a -> a -> STM ()
-writeTMVar t new = tryTakeTMVar t >> putTMVar t new
+writeTMVar (TMVar t) new = writeTVar t (Just new)
 
 -- |Check whether a given 'TMVar' is empty.
 isEmptyTMVar :: TMVar a -> STM Bool
