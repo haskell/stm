@@ -63,6 +63,9 @@ assertEmptyTBQueue queue = do
   atomically (tryPeekTBQueue queue) >>=
     assertEqual "Expected empty: tryPeekTBQueue should return Nothing" Nothing
 
+  atomically (snapshotTBQueue queue) >>=
+    assertEqual "Expected empty: snapshotTBQueue should return []" []
+
   atomically (flushTBQueue queue) >>=
     assertEqual "Expected empty: flushTBQueue should return []" []
 
