@@ -153,7 +153,7 @@ snapshotTBQueue :: TBQueue a -> STM [a]
 snapshotTBQueue (TBQueue _ read _ write _) = do
   xs <- readTVar read
   ys <- readTVar write
-  return $ xs ++ reverse ys
+  return (xs ++ reverse ys)
 
 -- | Efficiently read the entire contents of a 'TBQueue' into a list. This
 -- function never retries.
