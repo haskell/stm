@@ -19,7 +19,7 @@
 --
 -- 'TBQueue' is a bounded version of 'TQueue'. The queue has a maximum
 -- capacity set when it is created.  If the queue already contains the
--- maximum number of elements, then 'writeTBQueue' blocks until an
+-- maximum number of elements, then 'writeTBQueue' retries until an
 -- element is removed from the queue.
 --
 -- The implementation is based on an array to obtain /O(1)/
@@ -109,7 +109,7 @@ newTBQueueIO size
  where
   size' = fromIntegral size
 
--- | Write a value to a 'TBQueue'; blocks if the queue is full.
+-- | Write a value to a 'TBQueue'; retries if the queue is full.
 writeTBQueue :: TBQueue a -> a -> STM ()
 writeTBQueue (TBQueue _ windex elements size) a = do
   w <- readTVar windex
@@ -119,7 +119,7 @@ writeTBQueue (TBQueue _ windex elements size) a = do
     Just _ -> retry
   writeTVar windex $! incMod w size
 
--- | Read the next value from the 'TBQueue'.
+-- | Read the next value from the 'TBQueue'; retries if the queue is empty.
 readTBQueue :: TBQueue a -> STM a
 readTBQueue (TBQueue rindex _ elements size) = do
   r <- readTVar rindex
@@ -156,7 +156,7 @@ flushTBQueue (TBQueue _rindex windex elements size) = do
           go (decMod i size) (a : acc)
 
 -- | Get the next value from the @TBQueue@ without removing it,
--- retrying if the channel is empty.
+-- retrying if the queue is empty.
 peekTBQueue :: TBQueue a -> STM a
 peekTBQueue (TBQueue rindex _ elements _) = do
   r <- readTVar rindex
@@ -171,7 +171,7 @@ tryPeekTBQueue :: TBQueue a -> STM (Maybe a)
 tryPeekTBQueue q = fmap Just (peekTBQueue q) `orElse` pure Nothing
 
 -- | Put a data item back onto a channel, where it will be the next item read.
--- Blocks if the queue is full.
+-- Retries if the queue is full.
 unGetTBQueue :: TBQueue a -> a -> STM ()
 unGetTBQueue (TBQueue rindex _ elements size) a = do
   r <- readTVar rindex
