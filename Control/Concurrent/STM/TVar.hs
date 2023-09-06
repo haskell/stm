@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, MagicHash, UnboxedTuples #-}
+{-# LANGUAGE BangPatterns, CPP, MagicHash, UnboxedTuples #-}
 
 #if __GLASGOW_HASKELL__ >= 701
 {-# LANGUAGE Trustworthy #-}
@@ -73,7 +73,7 @@ modifyTVar' var f = do
 stateTVar :: TVar s -> (s -> (a, s)) -> STM a
 stateTVar var f = do
    s <- readTVar var
-   let (a, s') = f s -- since we destructure this, we are strict in f
+   let !(a, s') = f s
    writeTVar var s'
    return a
 {-# INLINE stateTVar #-}
