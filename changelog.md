@@ -1,5 +1,9 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## Upcoming
+
+  * Fix strictness of `stateTVar` ([#69](https://github.com/haskell/stm/pull/69))
+
 ## 2.5.1.0 *Aug 2022*
 
   * Teach `flushTBQueue` to only flush queue when necessary
