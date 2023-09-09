@@ -1,5 +1,6 @@
 {-# LANGUAGE AllowAmbiguousTypes, ScopedTypeVariables, RankNTypes, TypeApplications #-}
 
+import Control.Concurrent.Async
 import Control.Monad
 import Data.Foldable (traverse_)
 import System.Environment
@@ -10,8 +11,6 @@ import Control.Concurrent.Chan as Chan
 import Control.Concurrent.STM
 import Control.Concurrent.STM.TQueue
 import Control.Concurrent.STM.TBQueue
-
-import Async
 
 class Channel c where
     newc :: IO (c a)

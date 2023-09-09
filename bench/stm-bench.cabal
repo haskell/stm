@@ -13,8 +13,6 @@ description:
 benchmark chanbench
     type:             exitcode-stdio-1.0
     main-is:          ChanBench.hs
-    other-modules:
-        Async
-    build-depends:    base, stm, tasty, tasty-bench
+    build-depends:    base, stm, async, tasty, tasty-bench
     default-language: Haskell2010
     ghc-options:      -O2 -threaded -with-rtsopts=-N
