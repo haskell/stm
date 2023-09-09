@@ -22,8 +22,7 @@
 -- maximum number of elements, then 'writeTBQueue' blocks until an
 -- element is removed from the queue.
 --
--- The implementation is based on the traditional purely-functional
--- queue representation that uses two lists to obtain amortised /O(1)/
+-- The implementation is based on an array to obtain /O(1)/
 -- enqueue and dequeue operations.
 --
 -- @since 2.4
@@ -59,7 +58,7 @@ import Control.Concurrent.STM.TArray
 --
 -- @since 2.4
 data TBQueue a
-   = TBQueue {-# UNPACK #-} !(TVar Int)              -- read index
+   = TBQueue {-# UNPACK #-} !(TVar Int)             -- read index
              {-# UNPACK #-} !(TVar Int)             -- write index
              {-# UNPACK #-} !(TArray Int (Maybe a)) -- elements
              {-# UNPACK #-} !Int                    -- initial capacity
