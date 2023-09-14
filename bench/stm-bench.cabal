@@ -6,7 +6,7 @@ synopsis:            External testsuite for stm package
 category:            Benchmarking
 license:             BSD-3-Clause
 maintainer:          libraries@haskell.org
-tested-with:         GHC==8.8.*, GHC==8.6.*, GHC==8.4.*, GHC==8.2.*, GHC==8.0.*, GHC==7.10.*, GHC==7.8.*, GHC==7.6.*, GHC==7.4.*, GHC==7.2.*, GHC==7.0.*
+tested-with:         GHC==9.6.2, GHC==9.4.7, GHC==9.2.8, GHC==9.0.2, GHC==8.10.7, GHC==8.8.4, GHC==8.6.5, GHC==8.4.4, GHC==8.2.2, GHC==8.0.2, GHC==7.10.3, GHC==7.8.4, GHC==7.6.3, GHC==7.4.2, GHC==7.2.2
 description:
   The benchmarks are in a separate project to avoid cyclic dependencies.
 

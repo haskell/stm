@@ -215,6 +215,7 @@ jobs:
           touch cabal.project
           echo "packages: $GITHUB_WORKSPACE/source/." >> cabal.project
           echo "packages: $GITHUB_WORKSPACE/source/testsuite" >> cabal.project
+          echo "packages: $GITHUB_WORKSPACE/source/bench" >> cabal.project
           cat cabal.project
       - name: sdist
         run: |
@@ -230,18 +231,23 @@ jobs:
           echo "PKGDIR_stm=${PKGDIR_stm}" >> "$GITHUB_ENV"
           PKGDIR_testsuite="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/testsuite-[0-9.]*')"
           echo "PKGDIR_testsuite=${PKGDIR_testsuite}" >> "$GITHUB_ENV"
+          PKGDIR_stm_bench="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/stm-bench-[0-9.]*')"
+          echo "PKGDIR_stm_bench=${PKGDIR_stm_bench}" >> "$GITHUB_ENV"
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
           echo "packages: ${PKGDIR_stm}" >> cabal.project
           echo "packages: ${PKGDIR_testsuite}" >> cabal.project
+          echo "packages: ${PKGDIR_stm_bench}" >> cabal.project
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package stm" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package testsuite" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
+          if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package stm-bench" >> cabal.project ; fi
+          if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
           cat >> cabal.project <<EOF
           EOF
-          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(random|stm|testsuite)$/; }' >> cabal.project.local
+          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(random|stm|stm-bench|testsuite)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
       - name: dump install plan
@@ -272,6 +278,8 @@ jobs:
           cd ${PKGDIR_stm} || false
           ${CABAL} -vnormal check
           cd ${PKGDIR_testsuite} || false
+          ${CABAL} -vnormal check
+          cd ${PKGDIR_stm_bench} || false
           ${CABAL} -vnormal check
       - name: haddock
         run: |
