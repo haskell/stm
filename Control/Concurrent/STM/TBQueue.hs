@@ -45,6 +45,9 @@ module Control.Concurrent.STM.TBQueue (
     isFullTBQueue,
   ) where
 
+#if !MIN_VERSION_base(4,8,0)
+import Control.Applicative (pure)
+#endif
 import Data.Array.Base
 import Data.Maybe (isJust, isNothing)
 import Data.Typeable   (Typeable)
