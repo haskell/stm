@@ -34,9 +34,11 @@ module Control.Concurrent.STM.TBQueue (
         newTBQueue,
         newTBQueueIO,
         readTBQueue,
+        lazyReadTBQueue,
         tryReadTBQueue,
         flushTBQueue,
         peekTBQueue,
+        lazyPeekTBQueue,
         tryPeekTBQueue,
         writeTBQueue,
         unGetTBQueue,
@@ -47,6 +49,7 @@ module Control.Concurrent.STM.TBQueue (
 
 import           Control.Monad   (unless)
 import           Data.Typeable   (Typeable)
+import           Data.Tuple      (Solo(..))
 import           GHC.Conc        (STM, TVar, newTVar, newTVarIO, orElse,
                                   readTVar, retry, writeTVar)
 import           Numeric.Natural (Natural)
@@ -117,16 +120,17 @@ writeTBQueue (TBQueue rsize _read wsize write _size) a = do
   listend <- readTVar write
   writeTVar write (a:listend)
 
--- |Read the next value from the 'TBQueue'.
-readTBQueue :: TBQueue a -> STM a
-readTBQueue (TBQueue rsize read _wsize write _size) = do
+-- |Read the next value from the 'TBQueue', retrying if the channel is empty.
+-- Separates reversing the write-end from evaluating the next value.
+lazyReadTBQueue :: TBQueue a -> STM (Solo a)
+lazyReadTBQueue (TBQueue rsize read _wsize write _size)  = do
   xs <- readTVar read
   r <- readTVar rsize
   writeTVar rsize $! r + 1
   case xs of
     (x:xs') -> do
       writeTVar read xs'
-      return x
+      return (Solo x)
     [] -> do
       ys <- readTVar write
       case ys of
@@ -134,12 +138,18 @@ readTBQueue (TBQueue rsize read _wsize write _size) = do
         _  -> do
           -- NB. lazy: we want the transaction to be
           -- short, otherwise it will conflict
-          let ~(z,zs) = case reverse ys of
+          let (z,zs) = case reverse ys of
                           z':zs' -> (z',zs')
                           _      -> error "readTBQueue: impossible"
           writeTVar write []
           writeTVar read zs
-          return z
+          return (zs `seq` Solo z)
+
+-- |Read the next value from the 'TBQueue'.
+readTBQueue :: TBQueue a -> STM a
+readTBQueue q = do
+  r <- lazyReadTBQueue q
+  return (case r of Solo z -> z)
 
 -- | A version of 'readTBQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
@@ -163,13 +173,14 @@ flushTBQueue (TBQueue rsize read wsize write size) = do
       writeTVar wsize size
       return (xs ++ reverse ys)
 
--- | Get the next value from the @TBQueue@ without removing it,
--- retrying if the channel is empty.
-peekTBQueue :: TBQueue a -> STM a
-peekTBQueue (TBQueue _ read _ write _) = do
+-- | Get the next value from the @TBQueue@ without removing it, retrying if the
+-- channel is empty. Separates reversing the write-end from evaluating the next
+-- value.
+lazyPeekTBQueue :: TBQueue a -> STM (Solo a)
+lazyPeekTBQueue (TBQueue _ read _ write _) = do
   xs <- readTVar read
   case xs of
-    (x:_) -> return x
+    (x:_) -> return (Solo x)
     [] -> do
       ys <- readTVar write
       case ys of
@@ -179,7 +190,14 @@ peekTBQueue (TBQueue _ read _ write _) = do
                                   -- short, otherwise it will conflict
           writeTVar write []
           writeTVar read (z:zs)
-          return z
+          return (zs `seq` Solo z)
+
+-- | Get the next value from the @TBQueue@ without removing it,
+-- retrying if the channel is empty.
+peekTBQueue :: TBQueue a -> STM a
+peekTBQueue q = do
+  r <- lazyPeekTBQueue q
+  return (case r of Solo z -> z)
 
 -- | A version of 'peekTBQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.

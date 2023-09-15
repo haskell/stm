@@ -38,9 +38,11 @@ module Control.Concurrent.STM.TQueue (
         newTQueue,
         newTQueueIO,
         readTQueue,
+        lazyReadTQueue,
         tryReadTQueue,
         flushTQueue,
         peekTQueue,
+        lazyPeekTQueue,
         tryPeekTQueue,
         writeTQueue,
         unGetTQueue,
@@ -49,6 +51,7 @@ module Control.Concurrent.STM.TQueue (
 
 import GHC.Conc
 import Control.Monad (unless)
+import Data.Tuple (Solo(..))
 import Data.Typeable (Typeable)
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
@@ -84,14 +87,15 @@ writeTQueue (TQueue _read write) a = do
   listend <- readTVar write
   writeTVar write (a:listend)
 
--- |Read the next value from the 'TQueue'.
-readTQueue :: TQueue a -> STM a
-readTQueue (TQueue read write) = do
+-- |Read the next value from the 'TQueue', retrying if the channel is empty.
+-- Separates reversing the write-end from evaluating the next value.
+lazyReadTQueue :: TQueue a -> STM (Solo a)
+lazyReadTQueue (TQueue read write) = do
   xs <- readTVar read
   case xs of
     (x:xs') -> do
       writeTVar read xs'
-      return x
+      return (Solo x)
     [] -> do
       ys <- readTVar write
       case ys of
@@ -101,7 +105,13 @@ readTQueue (TQueue read write) = do
                                   -- short, otherwise it will conflict
           writeTVar write []
           writeTVar read zs
-          return z
+          return (zs `seq` Solo z)
+
+-- |Read the next value from the 'TQueue'.
+readTQueue :: TQueue a -> STM a
+readTQueue q = do
+  r <- lazyReadTQueue q
+  return (case r of Solo z -> z)
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
@@ -120,13 +130,14 @@ flushTQueue (TQueue read write) = do
   unless (null ys) $ writeTVar write []
   return (xs ++ reverse ys)
 
--- | Get the next value from the @TQueue@ without removing it,
--- retrying if the channel is empty.
-peekTQueue :: TQueue a -> STM a
-peekTQueue (TQueue read write) = do
+-- | Get the next value from the @TQueue@ without removing it, retrying if the
+-- channel is empty. Separates reversing the write-end from evaluating the next
+-- value.
+lazyPeekTQueue :: TQueue a -> STM (Solo a)
+lazyPeekTQueue (TQueue read write) = do
   xs <- readTVar read
   case xs of
-    (x:_) -> return x
+    (x:_) -> return (Solo x)
     [] -> do
       ys <- readTVar write
       case ys of
@@ -136,7 +147,14 @@ peekTQueue (TQueue read write) = do
                                   -- short, otherwise it will conflict
           writeTVar write []
           writeTVar read (z:zs)
-          return z
+          return (zs `seq` Solo z)
+
+-- | Get the next value from the @TQueue@ without removing it,
+-- retrying if the channel is empty.
+peekTQueue :: TQueue a -> STM a
+peekTQueue q = do
+  r <- lazyPeekTQueue q
+  return (case r of Solo z -> z)
 
 -- | A version of 'peekTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
