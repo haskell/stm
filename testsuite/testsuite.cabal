@@ -35,7 +35,7 @@ test-suite stm
 
   --
   build-depends:
-    , base                   >= 4.3 && < 4.20
+    , base                   >= 4.4 && < 4.20
     , test-framework        ^>= 0.8.2.0
     , test-framework-hunit  ^>= 0.3.0.2
     , HUnit                 ^>= 1.6.0.0
