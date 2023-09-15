@@ -39,6 +39,7 @@ module Control.Concurrent.STM.TQueue (
         newTQueueIO,
         readTQueue,
         tryReadTQueue,
+        snapshotTQueue,
         flushTQueue,
         peekTQueue,
         tryPeekTQueue,
@@ -107,6 +108,14 @@ readTQueue (TQueue read write) = do
 -- returns @Nothing@ if no value is available.
 tryReadTQueue :: TQueue a -> STM (Maybe a)
 tryReadTQueue c = fmap Just (readTQueue c) `orElse` return Nothing
+
+-- | Efficiently read the entire contents of a 'TQueue' into a list without changing queue contents.
+-- This function never retries.
+snapshotTQueue :: TQueue a -> STM [a]
+snapshotTQueue (TQueue read write) = do
+  xs <- readTVar read
+  ys <- readTVar write
+  return (xs ++ reverse ys)
 
 -- | Efficiently read the entire contents of a 'TQueue' into a list. This
 -- function never retries.

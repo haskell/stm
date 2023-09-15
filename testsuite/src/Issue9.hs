@@ -24,6 +24,9 @@ main = do
   -- Read 1
   1 <- atomically (readTBQueue queue)
 
+  -- Snapshot [2..5]
+  [2,3,4,5] <- atomically (snapshotTBQueue queue)
+
   -- Flush [2..5]
   [2,3,4,5] <- atomically (flushTBQueue queue)
 
