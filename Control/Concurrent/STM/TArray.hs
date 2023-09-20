@@ -9,7 +9,7 @@
 -- Module      :  Control.Concurrent.STM.TArray
 -- Copyright   :  (c) The University of Glasgow 2005
 -- License     :  BSD-style (see the file libraries/base/LICENSE)
--- 
+--
 -- Maintainer  :  libraries@haskell.org
 -- Stability   :  experimental
 -- Portability :  non-portable (requires STM)
@@ -23,15 +23,15 @@ module Control.Concurrent.STM.TArray (
 ) where
 
 import Data.Array (Array, bounds)
-import Data.Array.Base (listArray, arrEleBottom, unsafeAt, MArray(..),
+import Data.Array.Base (listArray, unsafeAt, MArray(..),
                         IArray(numElements))
 import Data.Ix (rangeSize)
 import Data.Typeable (Typeable)
-import Control.Concurrent.STM.TVar (TVar, newTVar, readTVar, writeTVar)
+import Control.Concurrent.STM.TVar (TVar, newTVar, newTVarIO, readTVar, readTVarIO, writeTVar)
 #ifdef __GLASGOW_HASKELL__
-import GHC.Conc (STM)
+import GHC.Conc (STM, atomically)
 #else
-import Control.Sequential.STM (STM)
+import Control.Sequential.STM (STM, atomically)
 #endif
 
 -- |TArray is a transactional array, supporting the usual 'MArray'
@@ -45,15 +45,26 @@ newtype TArray i e = TArray (Array i (TVar e)) deriving (Eq, Typeable)
 
 instance MArray TArray e STM where
     getBounds (TArray a) = return (bounds a)
+    getNumElements (TArray a) = return (numElements a)
     newArray b e = do
         a <- rep (rangeSize b) (newTVar e)
         return $ TArray (listArray b a)
-    newArray_ b = do
-        a <- rep (rangeSize b) (newTVar arrEleBottom)
-        return $ TArray (listArray b a)
     unsafeRead (TArray a) i = readTVar $ unsafeAt a i
     unsafeWrite (TArray a) i e = writeTVar (unsafeAt a i) e
+
+    {-# INLINE newArray #-}
+
+-- | Writes are slow in `IO`.
+instance MArray TArray e IO where
+    getBounds (TArray a) = return (bounds a)
     getNumElements (TArray a) = return (numElements a)
+    newArray b e = do
+        a <- rep (rangeSize b) (newTVarIO e)
+        return $ TArray (listArray b a)
+    unsafeRead (TArray a) i = readTVarIO $ unsafeAt a i
+    unsafeWrite (TArray a) i e = atomically $ writeTVar (unsafeAt a i) e
+
+    {-# INLINE newArray #-}
 
 -- | Like 'replicateM' but uses an accumulator to prevent stack overflows.
 -- Unlike 'replicateM' the returned list is in reversed order.

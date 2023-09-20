@@ -1,4 +1,7 @@
-packages: . testsuite/
+packages:
+  .
+  testsuite
+  bench
 
 package testsuite
   tests: true

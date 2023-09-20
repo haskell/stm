@@ -215,6 +215,7 @@ jobs:
           touch cabal.project
           echo "packages: $GITHUB_WORKSPACE/source/." >> cabal.project
           echo "packages: $GITHUB_WORKSPACE/source/testsuite" >> cabal.project
+          if [ $((HCNUMVER >= 80000)) -ne 0 ] ; then echo "packages: $GITHUB_WORKSPACE/source/bench" >> cabal.project ; fi
           cat cabal.project
       - name: sdist
         run: |
@@ -230,18 +231,23 @@ jobs:
           echo "PKGDIR_stm=${PKGDIR_stm}" >> "$GITHUB_ENV"
           PKGDIR_testsuite="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/testsuite-[0-9.]*')"
           echo "PKGDIR_testsuite=${PKGDIR_testsuite}" >> "$GITHUB_ENV"
+          PKGDIR_stm_bench="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/stm-bench-[0-9.]*')"
+          echo "PKGDIR_stm_bench=${PKGDIR_stm_bench}" >> "$GITHUB_ENV"
           rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
           echo "packages: ${PKGDIR_stm}" >> cabal.project
           echo "packages: ${PKGDIR_testsuite}" >> cabal.project
+          if [ $((HCNUMVER >= 80000)) -ne 0 ] ; then echo "packages: ${PKGDIR_stm_bench}" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package stm" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package testsuite" >> cabal.project ; fi
           if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
+          if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "package stm-bench" >> cabal.project ; fi
+          if [ $((HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
           cat >> cabal.project <<EOF
           EOF
-          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(random|stm|testsuite)$/; }' >> cabal.project.local
+          $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(exceptions|filepath|stm|stm-bench|testsuite)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
       - name: dump install plan
@@ -254,10 +260,6 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
           path: ~/.cabal/store
           restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
-      - name: install dependencies
-        run: |
-          $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --dependencies-only -j2 all
-          $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH --dependencies-only -j2 all
       - name: build w/o tests
         run: |
           $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks all
@@ -273,6 +275,8 @@ jobs:
           ${CABAL} -vnormal check
           cd ${PKGDIR_testsuite} || false
           ${CABAL} -vnormal check
+          if [ $((HCNUMVER >= 80000)) -ne 0 ] ; then cd ${PKGDIR_stm_bench} || false ; fi
+          if [ $((HCNUMVER >= 80000)) -ne 0 ] ; then ${CABAL} -vnormal check ; fi
       - name: haddock
         run: |
           $CABAL v2-haddock --disable-documentation --haddock-all $ARG_COMPILER --with-haddock $HADDOCK $ARG_TESTS $ARG_BENCH all
