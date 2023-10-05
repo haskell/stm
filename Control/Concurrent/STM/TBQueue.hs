@@ -43,6 +43,7 @@ module Control.Concurrent.STM.TBQueue (
     lengthTBQueue,
     isEmptyTBQueue,
     isFullTBQueue,
+    capacityTBQueue,
   ) where
 
 #if !MIN_VERSION_base(4,8,0)
@@ -82,46 +83,46 @@ decMod x cap = if x == 0 then cap - 1 else x - 1
 -- | Builds and returns a new instance of 'TBQueue'.
 newTBQueue :: Natural   -- ^ maximum number of elements the queue can hold
            -> STM (TBQueue a)
-newTBQueue size
-  | size <= 0 = error "capacity has to be greater than 0"
-  | size > fromIntegral (maxBound :: Int) = error "capacity is too big"
+newTBQueue cap
+  | cap <= 0 = error "capacity has to be greater than 0"
+  | cap > fromIntegral (maxBound :: Int) = error "capacity is too big"
   | otherwise = do
       rindex <- newTVar 0
       windex <- newTVar 0
-      elements <- newArray (0, size' - 1) Nothing
-      pure (TBQueue rindex windex elements size')
+      elements <- newArray (0, cap' - 1) Nothing
+      pure (TBQueue rindex windex elements cap')
  where
-  size' = fromIntegral size
+  cap' = fromIntegral cap
 
 -- | @IO@ version of 'newTBQueue'.  This is useful for creating top-level
 -- 'TBQueue's using 'System.IO.Unsafe.unsafePerformIO', because using
 -- 'atomically' inside 'System.IO.Unsafe.unsafePerformIO' isn't
 -- possible.
 newTBQueueIO :: Natural -> IO (TBQueue a)
-newTBQueueIO size
-  | size <= 0 = error "capacity has to be greater than 0"
-  | size > fromIntegral (maxBound :: Int) = error "capacity is too big"
+newTBQueueIO cap
+  | cap <= 0 = error "capacity has to be greater than 0"
+  | cap > fromIntegral (maxBound :: Int) = error "capacity is too big"
   | otherwise = do
       rindex <- newTVarIO 0
       windex <- newTVarIO 0
-      elements <- newArray (0, size' - 1) Nothing
-      pure (TBQueue rindex windex elements size')
+      elements <- newArray (0, cap' - 1) Nothing
+      pure (TBQueue rindex windex elements cap')
  where
-  size' = fromIntegral size
+  cap' = fromIntegral cap
 
 -- | Write a value to a 'TBQueue'; retries if the queue is full.
 writeTBQueue :: TBQueue a -> a -> STM ()
-writeTBQueue (TBQueue _ windex elements size) a = do
+writeTBQueue (TBQueue _ windex elements cap) a = do
   w <- readTVar windex
   ele <- unsafeRead elements w
   case ele of
     Nothing -> unsafeWrite elements w (Just a)
     Just _ -> retry
-  writeTVar windex $! incMod w size
+  writeTVar windex $! incMod w cap
 
 -- | Read the next value from the 'TBQueue'; retries if the queue is empty.
 readTBQueue :: TBQueue a -> STM a
-readTBQueue (TBQueue rindex _ elements size) = do
+readTBQueue (TBQueue rindex _ elements cap) = do
   r <- readTVar rindex
   ele <- unsafeRead elements r
   a <- case ele of
@@ -129,7 +130,7 @@ readTBQueue (TBQueue rindex _ elements size) = do
         Just a -> do
           unsafeWrite elements r Nothing
           pure a
-  writeTVar rindex $! incMod r size
+  writeTVar rindex $! incMod r cap
   pure a
 
 -- | A version of 'readTBQueue' which does not retry. Instead it
@@ -142,9 +143,9 @@ tryReadTBQueue q = fmap Just (readTBQueue q) `orElse` pure Nothing
 --
 -- @since 2.4.5
 flushTBQueue :: forall a. TBQueue a -> STM [a]
-flushTBQueue (TBQueue _rindex windex elements size) = do
+flushTBQueue (TBQueue _rindex windex elements cap) = do
   w <- readTVar windex
-  go (decMod w size) []
+  go (decMod w cap) []
  where
   go :: Int -> [a] -> STM [a]
   go i acc = do
@@ -153,7 +154,7 @@ flushTBQueue (TBQueue _rindex windex elements size) = do
         Nothing -> pure acc
         Just a -> do
           unsafeWrite elements i Nothing
-          go (decMod i size) (a : acc)
+          go (decMod i cap) (a : acc)
 
 -- | Get the next value from the @TBQueue@ without removing it,
 -- retrying if the queue is empty.
@@ -173,30 +174,30 @@ tryPeekTBQueue q = fmap Just (peekTBQueue q) `orElse` pure Nothing
 -- | Put a data item back onto a channel, where it will be the next item read.
 -- Retries if the queue is full.
 unGetTBQueue :: TBQueue a -> a -> STM ()
-unGetTBQueue (TBQueue rindex _ elements size) a = do
+unGetTBQueue (TBQueue rindex _ elements cap) a = do
   r <- readTVar rindex
   ele <- unsafeRead elements r
   case ele of
     Nothing -> unsafeWrite elements r (Just a)
     Just _ -> retry
-  writeTVar rindex $! decMod r size
+  writeTVar rindex $! decMod r cap
 
 -- | Return the length of a 'TBQueue'.
 --
 -- @since 2.5.0.0
 lengthTBQueue :: TBQueue a -> STM Natural
-lengthTBQueue (TBQueue rindex windex elements size) = do
+lengthTBQueue (TBQueue rindex windex elements cap) = do
   r <- readTVar rindex
   w <- readTVar windex
   if w == r then do
-    -- length is 0 or size
+    -- length is 0 or cap
     ele <- unsafeRead elements r
     case ele of
       Nothing -> pure 0
-      Just _ -> pure $! fromIntegral size
+      Just _ -> pure $! fromIntegral cap
   else do
     let len' = w - r
-    pure $! fromIntegral (if len' < 0 then len' + size else len')
+    pure $! fromIntegral (if len' < 0 then len' + cap else len')
 
 -- | Returns 'True' if the supplied 'TBQueue' is empty.
 isEmptyTBQueue :: TBQueue a -> STM Bool
@@ -221,3 +222,9 @@ isFullTBQueue (TBQueue rindex windex elements _) = do
     pure $! isJust ele
   else
     pure False
+
+-- | The maximum number of elements the queue can hold.
+--
+-- @since TODO
+capacityTBQueue :: TBQueue a -> Natural
+capacityTBQueue (TBQueue _ _ _ cap) = fromIntegral cap
