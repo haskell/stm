@@ -3,6 +3,8 @@
 ## Upcoming
 
   * Fix strictness of `stateTVar` ([#69](https://github.com/haskell/stm/pull/69))
+  * Rewrite `TBQueue` to use arrays ([#70](https://github.com/haskell/stm/pull/70))
+  * Use unlifted `Array#` for `TArray` ([#66](https://github.com/haskell/stm/pull/66))
 
 ## 2.5.1.0 *Aug 2022*
 
