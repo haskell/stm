@@ -1,5 +1,9 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.2.1 *September 2023*
+
+  * Eliminate reliance on undefined CPP behavior ([#75](https://github.com/haskell/stm/issues/75))
+
 ## 2.5.2.0 *September 2023*
 
   * Fix strictness of `stateTVar` ([#30](https://github.com/haskell/stm/ssues/30))

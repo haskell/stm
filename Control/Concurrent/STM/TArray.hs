@@ -4,9 +4,11 @@
 {-# LANGUAGE Trustworthy #-}
 #endif
 
-#define HAS_UNLIFTED_ARRAY defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 904
+#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 904
+#define HAS_UNLIFTED_ARRAY 1
+#endif
 
-#if HAS_UNLIFTED_ARRAY
+#if defined(HAS_UNLIFTED_ARRAY)
 {-# LANGUAGE MagicHash, UnboxedTuples #-}
 #endif
 
@@ -30,7 +32,7 @@ module Control.Concurrent.STM.TArray (
 
 import Control.Monad.STM (STM, atomically)
 import Data.Typeable (Typeable)
-#if HAS_UNLIFTED_ARRAY
+#if defined(HAS_UNLIFTED_ARRAY)
 import Control.Concurrent.STM.TVar (readTVar, readTVarIO, writeTVar)
 import Data.Array.Base (safeRangeSize, MArray(..))
 import Data.Ix (Ix)
@@ -47,7 +49,7 @@ import Data.Array.Base (safeRangeSize, unsafeAt, MArray(..), IArray(numElements)
 -- interface for mutable arrays.
 --
 -- It is conceptually implemented as @Array i (TVar e)@.
-#if HAS_UNLIFTED_ARRAY
+#if defined(HAS_UNLIFTED_ARRAY)
 data TArray i e = TArray
     !i   -- lower bound
     !i   -- upper bound
