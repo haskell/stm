@@ -9,7 +9,6 @@
 module Issue76 (main) where
 
 import Control.Concurrent.STM
-import Data.Foldable
 import Test.HUnit
 
 main :: IO ()
