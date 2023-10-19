@@ -143,18 +143,15 @@ tryReadTBQueue q = fmap Just (readTBQueue q) `orElse` pure Nothing
 --
 -- @since 2.4.5
 flushTBQueue :: forall a. TBQueue a -> STM [a]
-flushTBQueue (TBQueue _rindex windex elements cap) = do
-  w <- readTVar windex
-  go (decMod w cap) []
- where
-  go :: Int -> [a] -> STM [a]
-  go i acc = do
-      ele <- unsafeRead elements i
-      case ele of
-        Nothing -> pure acc
-        Just a -> do
-          unsafeWrite elements i Nothing
-          go (decMod i cap) (a : acc)
+flushTBQueue queue =
+  -- TODO: Optimize.
+  go []
+  where
+    go acc = do
+      tryReadResult <- tryReadTBQueue queue
+      case tryReadResult of
+        Just element -> go $ element : acc
+        Nothing -> return $ reverse acc
 
 -- | Get the next value from the @TBQueue@ without removing it,
 -- retrying if the queue is empty.
