@@ -143,9 +143,11 @@ tryReadTBQueue q = fmap Just (readTBQueue q) `orElse` pure Nothing
 --
 -- @since 2.4.5
 flushTBQueue :: forall a. TBQueue a -> STM [a]
-flushTBQueue (TBQueue _rindex windex elements cap) = do
+flushTBQueue (TBQueue rindex windex elements cap) = do
   w <- readTVar windex
-  go (decMod w cap) []
+  res <- go (decMod w cap) []
+  writeTVar windex =<< readTVar rindex
+  pure res
  where
   go :: Int -> [a] -> STM [a]
   go i acc = do
