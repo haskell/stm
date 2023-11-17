@@ -1,6 +1,6 @@
 cabal-version:  >=1.10
 name:           stm
-version:        2.5.2.1
+version:        2.5.3.0
 -- don't forget to update changelog.md file!
 
 license:        BSD3
