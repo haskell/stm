@@ -11,8 +11,9 @@ inc tv = do
   writeTVar tv (v + 1)
 
 bad :: MVar () -> IO ()
-bad m = do { evaluate (1 `quot` 0); return () }
-         `finally` putMVar m ()
+bad m = handle (\(_ :: SomeException) -> putStrLn "bad" >> putMVar m ()) $ do
+  evaluate (1 `quot` 0)
+  return ()
 
 main :: IO ()
 main = do
@@ -22,3 +23,4 @@ main = do
   forkOS (bad m)
   takeMVar m
   threadDelay 100000 -- allow time for the exception to be printed
+

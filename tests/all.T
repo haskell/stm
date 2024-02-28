@@ -6,8 +6,7 @@ test('stm050', [extra_run_opts('10000')], compile_and_run, ['-package stm'])
 
 test('stm054', normal, compile_and_run, ['-package stm'])
 test('stm055', [exit_code(1), js_broken(22576)], compile_and_run, ['-package stm'])
-test('stm056', only_ways(['threaded1','threaded2']),
-                compile_and_run, ['-package stm'])
+test('stm056', only_ways(['threaded1','threaded2']), compile_and_run, ['-package stm'])
 
 test('stm061', normal, compile_and_run, ['-package stm'])
 test('T2411', ignore_stdout, compile_and_run, ['-package stm'])
