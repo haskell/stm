@@ -244,6 +244,6 @@ isFullTBQueue (TBQueue rsize _read wsize _write _size) = do
 
 -- | The maximum number of elements the queue can hold.
 --
--- @since TODO
+-- @since 2.5.2.0
 capacityTBQueue :: TBQueue a -> Natural
 capacityTBQueue (TBQueue _ _ _ _ cap) = fromIntegral cap
