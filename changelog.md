@@ -1,5 +1,9 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.3.1 *November 2023*
+
+  * Drop unused testcase inadvertently introduced in previous reversion
+
 ## 2.5.3.0 *November 2023*
 
   * Revert array-based reimplementation of `TBQueue` due to [#76](https://github.com/haskell/stm/issues/76)
