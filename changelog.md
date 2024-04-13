@@ -1,18 +1,18 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
-## 2.5.3.1 *November 2023*
+## 2.5.3.1 *Apr 2024*
 
   * Drop unused testcase inadvertently introduced in previous reversion
 
-## 2.5.3.0 *November 2023*
+## 2.5.3.0 *Nov 2023*
 
   * Revert array-based reimplementation of `TBQueue` due to [#76](https://github.com/haskell/stm/issues/76)
 
-## 2.5.2.1 *September 2023*
+## 2.5.2.1 *Oct 2023*
 
   * Eliminate reliance on undefined CPP behavior ([#75](https://github.com/haskell/stm/issues/75))
 
-## 2.5.2.0 *September 2023*
+## 2.5.2.0 *Oct 2023*
 
   * Fix strictness of `stateTVar` ([#30](https://github.com/haskell/stm/ssues/30))
   * Rewrite `TBQueue` to use a more-efficient array-based representation ([#65](https://github.com/haskell/stm/issues/65))
