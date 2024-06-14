@@ -86,9 +86,9 @@ newTChanIO = do
 --
 -- >serve :: TChan Message -> Client -> IO loop
 -- >serve broadcastChan client = do
--- >    myChan <- dupTChan broadcastChan
+-- >    myChan <- atomically $ dupTChan broadcastChan
 -- >    forever $ do
--- >        message <- readTChan myChan
+-- >        message <- atomically $ readTChan myChan
 -- >        send client message
 --
 -- The problem with using 'newTChan' to create the broadcast channel is that if
