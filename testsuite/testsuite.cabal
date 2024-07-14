@@ -14,7 +14,7 @@ description:
   See also @README.md@ for more information.
 
 tested-with:
-  GHC == 9.10.0
+  GHC == 9.10.1
   GHC == 9.8.2
   GHC == 9.6.4
   GHC == 9.4.8
@@ -26,11 +26,6 @@ tested-with:
   GHC == 8.4.4
   GHC == 8.2.2
   GHC == 8.0.2
-  GHC == 7.10.3
-  GHC == 7.8.4
-  GHC == 7.6.3
-  GHC == 7.4.2
-  GHC == 7.2.2
 
 test-suite stm
   hs-source-dirs: src
