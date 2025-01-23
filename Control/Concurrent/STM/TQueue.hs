@@ -38,6 +38,7 @@ module Control.Concurrent.STM.TQueue (
         newTQueue,
         newTQueueIO,
         readTQueue,
+        readTQueueN,
         tryReadTQueue,
         flushTQueue,
         peekTQueue,
@@ -102,6 +103,64 @@ readTQueue (TQueue read write) = do
           writeTVar write []
           writeTVar read zs
           return z
+
+
+--                +-----------+--------------- +-----------------+
+--                | write = 0 | write < N-read | write >= N-read |
+-- +--------------+-----------+--------------- +-----------------+
+-- | read == 0    |  retry    |     case 2     |    case 3       |
+-- | 0 < read < N |  retry    |     retry      |    case 4       |
+-- +--------------+-----------+--------------- +-----------------+
+-- | read >= N    |   . . . . . . . case 1 . . . . . . . . .     |
+-- +----=--------------------------------------------------------+
+
+-- case 1a: More than N: splitAt N read -> put suffix in read and return prefix
+-- case 1b: Exactly N: Reverse write into read, and return all of the old read
+-- case 2: Move reverse write to read, retry
+-- case 3: Reverse write -> splitAt N, put suffix in read and return prefix
+-- case 4: Like case 3 but prepend read onto return value
+
+-- |Reads N values, blocking until enough are available
+readTQueueN :: Int -> TQueue a -> STM [a]
+readTQueueN n (TQueue read write) = do
+  xs <- readTVar read
+  let xl = length xs
+  if xl > n then do -- case 1a
+    let (as,bs) = splitAt n xs
+    writeTVar read bs
+    pure as
+  else if xl == n then do -- case 1b
+    ys <- readTVar write
+    case ys of
+      [] -> do 
+        writeTVar read []
+        retry
+      _ -> do
+        let zs = reverse ys
+        writeTVar write []
+        writeTVar read zs
+        pure xs
+  else do
+    ys <- readTVar write
+    let yl = length ys
+    if yl == 0 then
+      retry
+    else if yl < n - xl then
+      if xl == 0 then do -- case 2
+        let zs = reverse ys
+        writeTVar write []
+        writeTVar read zs
+        retry
+      else
+        retry
+    else do -- cases 3 and 4    
+      let (as,bs) = splitAt (n-xl) (reverse ys)
+      writeTVar read bs
+      pure $ xs <> as
+
+
+
+
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
