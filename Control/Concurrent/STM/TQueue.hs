@@ -121,8 +121,8 @@ readTQueue (TQueue read write) = do
 -- case 4: Like case 3 but prepend read onto return value
 
 -- |Reads N values, blocking until enough are available
-readTQueueN :: Int -> TQueue a -> STM [a]
-readTQueueN n (TQueue read write) = do
+readTQueueN :: TQueue a -> Int -> STM [a]
+readTQueueN (TQueue read write) n = do
   xs <- readTVar read
   let xl = length xs
   if xl > n then do -- case 1a

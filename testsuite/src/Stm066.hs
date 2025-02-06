@@ -23,8 +23,8 @@ main = do
     writeTQueue q 3
     writeTQueue q 4
   l <- atomically $ do
-         _ <- readTQueueN 1 q 
-         readTQueueN 3 q 
+         _ <- readTQueueN q 1 
+         readTQueueN q 3 
 
   unless (l == [2,3,4]) $
     fail (show l)
