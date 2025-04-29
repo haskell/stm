@@ -39,6 +39,7 @@ module Control.Concurrent.STM.TQueue (
         newTQueueIO,
         readTQueue,
         readTQueueN,
+        lenTQueue,
         tryReadTQueue,
         flushTQueue,
         peekTQueue,
@@ -158,9 +159,14 @@ readTQueueN (TQueue read write) n = do
       writeTVar read bs
       pure $ xs <> as
 
+lenTQueue :: TQueue a -> STM Int
+lenTQueue = lenTQueue_ 0
 
-
-
+lenTQueue_ :: Int -> TQueue a -> STM Int
+lenTQueue_ i q = do
+  tryReadTQueue q >>= maybe
+    (pure i)
+    (const $ lenTQueue_ (1+i) q)
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
