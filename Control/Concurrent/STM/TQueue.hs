@@ -39,7 +39,6 @@ module Control.Concurrent.STM.TQueue (
         newTQueueIO,
         readTQueue,
         readTQueueN,
-        lenTQueue,
         tryReadTQueue,
         flushTQueue,
         peekTQueue,
@@ -106,10 +105,11 @@ readTQueue (TQueue read write) = do
           return z
 
 
+-- Logic of readTQueueN:
 --                +-----------+--------------- +-----------------+
 --                | write = 0 | write < N-read | write >= N-read |
 -- +--------------+-----------+--------------- +-----------------+
--- | read == 0    |  retry    |     case 2     |    case 3       |
+-- | read == 0    |  retry    |     retry      |    case 3       |
 -- | 0 < read < N |  retry    |     retry      |    case 4       |
 -- +--------------+-----------+--------------- +-----------------+
 -- | read >= N    |   . . . . . . . case 1 . . . . . . . . .     |
@@ -117,11 +117,17 @@ readTQueue (TQueue read write) = do
 
 -- case 1a: More than N: splitAt N read -> put suffix in read and return prefix
 -- case 1b: Exactly N: Reverse write into read, and return all of the old read
--- case 2: Move reverse write to read, retry
+-- case 2: No longer exists
 -- case 3: Reverse write -> splitAt N, put suffix in read and return prefix
 -- case 4: Like case 3 but prepend read onto return value
 
--- |Reads N values, blocking until enough are available
+-- |Reads N values, blocking until enough are available.
+-- This is likely never to return if another thread is
+-- blocking on readTQueue. It has quadratic complexity
+-- in n due to each write triggering readTQueueN to calculate
+-- the length of the write side as <n items pile up there.
+--
+-- @since 2.5.4
 readTQueueN :: TQueue a -> Int -> STM [a]
 readTQueueN (TQueue read write) n = do
   xs <- readTVar read
@@ -146,27 +152,11 @@ readTQueueN (TQueue read write) n = do
     let yl = length ys
     if yl == 0 then
       retry
-    else if yl < n - xl then
-      if xl == 0 then do -- case 2
-        let zs = reverse ys
-        writeTVar write []
-        writeTVar read zs
-        retry
-      else
-        retry
+    else if yl < n - xl then retry
     else do -- cases 3 and 4    
       let (as,bs) = splitAt (n-xl) (reverse ys)
       writeTVar read bs
       pure $ xs <> as
-
-lenTQueue :: TQueue a -> STM Int
-lenTQueue = lenTQueue_ 0
-
-lenTQueue_ :: Int -> TQueue a -> STM Int
-lenTQueue_ i q = do
-  tryReadTQueue q >>= maybe
-    (pure i)
-    (const $ lenTQueue_ (1+i) q)
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
