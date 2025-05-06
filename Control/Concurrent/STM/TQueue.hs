@@ -105,27 +105,26 @@ readTQueue (TQueue read write) = do
           return z
 
 
--- Logic of readTQueueN:
+-- Logic of `readTQueueN`:
 --                +-----------+--------------- +-----------------+
 --                | write = 0 | write < N-read | write >= N-read |
 -- +--------------+-----------+--------------- +-----------------+
--- | read == 0    |  retry    |     retry      |    case 3       |
--- | 0 < read < N |  retry    |     retry      |    case 4       |
+-- | read == 0    |  retry    |     retry      |    case 2       |
+-- | 0 < read < N |  retry    |     retry      |    case 3       |
 -- +--------------+-----------+--------------- +-----------------+
 -- | read >= N    |   . . . . . . . case 1 . . . . . . . . .     |
 -- +----=--------------------------------------------------------+
 
 -- case 1a: More than N: splitAt N read -> put suffix in read and return prefix
 -- case 1b: Exactly N: Reverse write into read, and return all of the old read
--- case 2: No longer exists
--- case 3: Reverse write -> splitAt N, put suffix in read and return prefix
--- case 4: Like case 3 but prepend read onto return value
+-- case 2: Reverse write -> splitAt N, put suffix in read and return prefix
+-- case 3: Like case 2 but prepend read onto return value
 
 -- |Reads N values, blocking until enough are available.
 -- This is likely never to return if another thread is
--- blocking on readTQueue. It has quadratic complexity
--- in n due to each write triggering readTQueueN to calculate
--- the length of the write side as <n items pile up there.
+-- blocking on `readTQueue`. It has quadratic complexity
+-- in N due to each write triggering `readTQueueN` to calculate
+-- the length of the write side as <N items pile up there.
 --
 -- @since 2.5.4
 readTQueueN :: TQueue a -> Int -> STM [a]
@@ -153,7 +152,7 @@ readTQueueN (TQueue read write) n = do
     if yl == 0 then
       retry
     else if yl < n - xl then retry
-    else do -- cases 3 and 4    
+    else do -- cases 2 and 3    
       let (as,bs) = splitAt (n-xl) (reverse ys)
       writeTVar read bs
       pure $ xs <> as
