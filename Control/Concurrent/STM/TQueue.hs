@@ -51,6 +51,7 @@ module Control.Concurrent.STM.TQueue (
 import GHC.Conc
 import Control.Monad (unless)
 import Data.Typeable (Typeable)
+import Data.Monoid ((<>)) -- Needed by ghc-8.6.5 or earlier
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
 --
