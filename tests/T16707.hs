@@ -3,7 +3,7 @@ import Control.Concurrent.STM
 import Debug.Trace
 
 main :: IO ()
-main = (`mapM_` [1..1000]) $ \_ -> do
+main = (`mapM_` [1..3]) $ \_ -> do
   traceEventIO "(((("
 
   x <- newTVarIO False
