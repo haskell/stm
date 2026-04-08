@@ -37,6 +37,7 @@ test-suite stm
     Stm052
     Stm064
     Stm065
+    Stm066
 
   type: exitcode-stdio-1.0
 

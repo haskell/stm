@@ -10,6 +10,7 @@ import qualified Issue17
 import qualified Stm052
 import qualified Stm064
 import qualified Stm065
+import qualified Stm066
 
 main :: IO ()
 main = do
@@ -23,6 +24,7 @@ main = do
         , testCase "stm052" Stm052.main
         , testCase "stm064" Stm064.main
         , testCase "stm065" Stm065.main
+        , testCase "stm066" Stm066.main
         ]
       ]
 
