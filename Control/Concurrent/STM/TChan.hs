@@ -78,9 +78,9 @@ newTChanIO = do
   write <- newTVarIO hole
   return (TChan read write)
 
--- | Create a write-only 'TChan'.  More precisely, 'readTChan' will 'retry'
--- even after items have been written to the channel.  The only way to read
--- a broadcast channel is to duplicate it with 'dupTChan'.
+-- | Create a write-only 'TChan'.  More precisely, 'readTChan' will
+-- throw an exception.  The only way to read a broadcast channel is to
+-- duplicate it with 'dupTChan'.
 --
 -- Consider a server that broadcasts messages to clients:
 --

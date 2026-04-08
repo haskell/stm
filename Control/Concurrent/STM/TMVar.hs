@@ -149,7 +149,7 @@ swapTMVar (TMVar t) new = do
     Nothing -> retry
     Just old -> do writeTVar t (Just new); return old
 
--- | Non-blocking write of a new value to a 'TMVar'
+-- | Non-blocking write of a new value to a 'TMVar'.
 -- Puts if empty. Replaces if populated.
 --
 -- @since 2.5.1

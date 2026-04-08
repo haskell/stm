@@ -22,8 +22,8 @@
 -- maximum number of elements, then 'writeTBQueue' retries until an
 -- element is removed from the queue.
 --
--- The implementation is based on an array to obtain /O(1)/
--- enqueue and dequeue operations.
+-- The implementation is based on the traditional purely-functional
+-- queue representation that uses two lists to obtain amortised /O(1)/.
 --
 -- @since 2.4
 -----------------------------------------------------------------------------
