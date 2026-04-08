@@ -28,19 +28,34 @@ jobs:
     strategy:
       matrix:
         include:
-          - compiler: ghc-9.10.1
+          - compiler: ghc-nightly
             compilerKind: ghc
-            compilerVersion: 9.10.1
+            compilerVersion: nightly
+            setup-method: ghcup-nightly
+            allow-failure: true
+          - compiler: ghc-9.14.1
+            compilerKind: ghc
+            compilerVersion: 9.14.1
             setup-method: ghcup
             allow-failure: false
-          - compiler: ghc-9.8.2
+          - compiler: ghc-9.12.4
             compilerKind: ghc
-            compilerVersion: 9.8.2
+            compilerVersion: 9.12.4
             setup-method: ghcup
             allow-failure: false
-          - compiler: ghc-9.6.4
+          - compiler: ghc-9.10.3
             compilerKind: ghc
-            compilerVersion: 9.6.4
+            compilerVersion: 9.10.3
+            setup-method: ghcup
+            allow-failure: false
+          - compiler: ghc-9.8.4
+            compilerKind: ghc
+            compilerVersion: 9.8.4
+            setup-method: ghcup
+            allow-failure: false
+          - compiler: ghc-9.6.7
+            compilerKind: ghc
+            compilerVersion: 9.6.7
             setup-method: ghcup
             allow-failure: false
           - compiler: ghc-9.4.8
@@ -117,6 +132,22 @@ jobs:
           HCKIND: ${{ matrix.compilerKind }}
           HCNAME: ${{ matrix.compiler }}
           HCVER: ${{ matrix.compilerVersion }}
+      - name: Install GHC (GHCup nightly)
+        if: matrix.setup-method == 'ghcup-nightly'
+        run: |
+          NIGHTLY_URL=https://ghc.gitlab.haskell.org/ghcup-metadata/ghcup-nightlies-0.0.7.yaml
+          "$HOME/.ghcup/bin/ghcup" --url-source="$NIGHTLY_URL" install ghc latest-nightly || \
+            (cat "$HOME"/.ghcup/logs/*.* && false)
+          HC=$("$HOME/.ghcup/bin/ghcup" --url-source="$NIGHTLY_URL" whereis ghc latest-nightly)
+          HCPKG=$(echo "$HC" | sed 's#ghc$#ghc-pkg#')
+          HADDOCK=$(echo "$HC" | sed 's#ghc$#haddock#')
+          echo "HC=$HC" >> "$GITHUB_ENV"
+          echo "HCPKG=$HCPKG" >> "$GITHUB_ENV"
+          echo "HADDOCK=$HADDOCK" >> "$GITHUB_ENV"
+          echo "HCVER=ghc-nightly" >> "$GITHUB_ENV"
+        env:
+          HCKIND: ${{ matrix.compilerKind }}
+          HCNAME: ${{ matrix.compiler }}
       - name: Set PATH and environment variables
         run: |
           echo "$HOME/.cabal/bin" >> $GITHUB_PATH
