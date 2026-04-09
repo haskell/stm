@@ -17,6 +17,7 @@
 module Control.Concurrent.STM.TSem
   ( TSem
   , newTSem
+  , newTSemIO
 
   , waitTSem
 
@@ -58,6 +59,10 @@ newtype TSem = TSem (TVar Integer)
 -- @since 2.4.2
 newTSem :: Integer -> STM TSem
 newTSem i = fmap TSem (newTVar $! i)
+
+-- |@IO@ equivalent of 'newTSem'.
+newTSemIO :: Integer -> IO TSem
+newTSemIO i = fmap TSem (newTVarIO $! i)
 
 -- NOTE: we can't expose a good `TSem -> STM Int' operation as blocked
 -- 'waitTSem' aren't reliably reflected in a negative counter value.

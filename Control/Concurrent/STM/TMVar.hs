@@ -32,10 +32,12 @@ module Control.Concurrent.STM.TMVar (
         readTMVar,
         writeTMVar,
         tryReadTMVar,
+        tryReadTMVarIO,
         swapTMVar,
         tryTakeTMVar,
         tryPutTMVar,
         isEmptyTMVar,
+        isEmptyTMVarIO,
         mkWeakTMVar
 #endif
   ) where
@@ -141,6 +143,17 @@ readTMVar (TMVar t) = do
 tryReadTMVar :: TMVar a -> STM (Maybe a)
 tryReadTMVar (TMVar t) = readTVar t
 
+-- | A version of 'readTMVar' which does not retry. This is
+-- equivalent to
+--
+-- >  readTVarIO = atomically . readTVar
+--
+-- but works much faster, because it doesn't perform a complete
+-- transaction, it just attempts to read the current value of
+-- the 'TMVar'.
+tryReadTMVarIO :: TMVar a -> IO (Maybe a)
+tryReadTMVarIO (TMVar t) = readTVarIO t
+
 -- |Swap the contents of a 'TMVar' for a new value.
 swapTMVar :: TMVar a -> a -> STM a
 swapTMVar (TMVar t) new = do
@@ -160,6 +173,14 @@ writeTMVar (TMVar t) new = writeTVar t (Just new)
 isEmptyTMVar :: TMVar a -> STM Bool
 isEmptyTMVar (TMVar t) = do
   m <- readTVar t
+  case m of
+    Nothing -> return True
+    Just _  -> return False
+
+-- |@IO@ version of 'isEmptyTVar'.
+isEmptyTMVarIO :: TMVar a -> IO Bool
+isEmptyTMVarIO (TMVar t) = do
+  m <- readTVarIO t
   case m of
     Nothing -> return True
     Just _  -> return False
