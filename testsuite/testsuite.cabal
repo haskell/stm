@@ -14,9 +14,11 @@ description:
   See also @README.md@ for more information.
 
 tested-with:
-  GHC == 9.10.1
-  GHC == 9.8.2
-  GHC == 9.6.4
+  GHC == 9.14.1
+  GHC == 9.12.4
+  GHC == 9.10.3
+  GHC == 9.8.4
+  GHC == 9.6.7
   GHC == 9.4.8
   GHC == 9.2.8
   GHC == 9.0.2
@@ -49,7 +51,7 @@ test-suite stm
 
   --
   build-depends:
-    , base                   >= 4.4 && < 4.23
+    , base                   >= 4.4 && < 4.24
     , test-framework        ^>= 0.8.2.0
     , test-framework-hunit  ^>= 0.3.0.2
     , HUnit                 ^>= 1.6.0.0
