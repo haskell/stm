@@ -1,5 +1,9 @@
 # Changelog for [`stm` package](http://hackage.haskell.org/package/stm)
 
+## 2.5.4.0 *Apr 2026*
+
+  * Add `IO` variants for operations that don't need to retry ([#94](https://github.com/haskell/stm/pull/94))
+
 ## 2.5.3.1 *Apr 2024*
 
   * Drop unused testcase inadvertently introduced in previous reversion
