@@ -44,6 +44,9 @@ module Control.Monad.STM (
         check,
 #endif
         throwSTM,
+#if __GLASGOW_HASKELL__ > 1002
+        rethrowSTM,
+#endif
         catchSTM
   ) where
 
