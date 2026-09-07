@@ -38,6 +38,7 @@ module Control.Concurrent.STM.TQueue (
         newTQueue,
         newTQueueIO,
         readTQueue,
+        readTQueueN,
         tryReadTQueue,
         flushTQueue,
         peekTQueue,
@@ -50,6 +51,7 @@ module Control.Concurrent.STM.TQueue (
 import GHC.Conc
 import Control.Monad (unless)
 import Data.Typeable (Typeable)
+import Data.Monoid ((<>)) -- Needed by ghc-8.6.5 or earlier
 
 -- | 'TQueue' is an abstract type representing an unbounded FIFO channel.
 --
@@ -102,6 +104,59 @@ readTQueue (TQueue read write) = do
           writeTVar write []
           writeTVar read zs
           return z
+
+
+-- Logic of `readTQueueN`:
+--                +-----------+--------------- +-----------------+
+--                | write = 0 | write < N-read | write >= N-read |
+-- +--------------+-----------+--------------- +-----------------+
+-- | read == 0    |  retry    |     retry      |    case 2       |
+-- | 0 < read < N |  retry    |     retry      |    case 3       |
+-- +--------------+-----------+--------------- +-----------------+
+-- | read >= N    |   . . . . . . . case 1 . . . . . . . . .     |
+-- +----=--------------------------------------------------------+
+
+-- case 1a: More than N: splitAt N read -> put suffix in read and return prefix
+-- case 1b: Exactly N: Reverse write into read, and return all of the old read
+-- case 2: Reverse write -> splitAt N, put suffix in read and return prefix
+-- case 3: Like case 2 but prepend read onto return value
+
+-- |Reads N values, blocking until enough are available.
+-- This is likely never to return if another thread is
+-- blocking on `readTQueue`. It has quadratic complexity
+-- in N due to each write triggering `readTQueueN` to calculate
+-- the length of the write side as <N items pile up there.
+--
+-- @since 2.5.4
+readTQueueN :: TQueue a -> Int -> STM [a]
+readTQueueN (TQueue read write) n = do
+  xs <- readTVar read
+  let xl = length xs
+  if xl > n then do -- case 1a
+    let (as,bs) = splitAt n xs
+    writeTVar read bs
+    pure as
+  else if xl == n then do -- case 1b
+    ys <- readTVar write
+    case ys of
+      [] -> do 
+        writeTVar read []
+        retry
+      _ -> do
+        let zs = reverse ys
+        writeTVar write []
+        writeTVar read zs
+        pure xs
+  else do
+    ys <- readTVar write
+    let yl = length ys
+    if yl == 0 then
+      retry
+    else if yl < n - xl then retry
+    else do -- cases 2 and 3    
+      let (as,bs) = splitAt (n-xl) (reverse ys)
+      writeTVar read bs
+      pure $ xs <> as
 
 -- | A version of 'readTQueue' which does not retry. Instead it
 -- returns @Nothing@ if no value is available.
