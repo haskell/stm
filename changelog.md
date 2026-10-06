@@ -3,6 +3,8 @@
 ## 2.5.4.0 *Apr 2026*
 
   * Add `IO` variants for operations that don't need to retry ([#94](https://github.com/haskell/stm/pull/94))
+  * Add strict (WHNF) variants of all data types in `Control.Concurrent.STM.*.Strict`
+    modules, re-exported from `Control.Concurrent.STM.Strict` ([#101](https://github.com/haskell/stm/issues/101))
 
 ## 2.5.3.1 *Apr 2024*
 
